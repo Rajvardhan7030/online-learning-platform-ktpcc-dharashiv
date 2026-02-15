@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeLearn Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/public/css/tutorial.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="#" class="logo">
+                <i class="fas fa-code"></i> E-learn
+            </a>
+            <div class="nav-links">
+                <a href="/public/html/dashboard.html">Dashboard</a>
+                <a href="/index.html">Home</a>
+                <a href="/public/IDE/console.html">Console</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <select id="prog-lang-select">
+                <option value="javascript" selected>JavaScript</option>
+                <option value="htmlcss">HTML & CSS</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+                <option value="c">C</option>
+            </select>
+            <select id="site-lang-select">
+                <option value="en" selected>English</option>
+                <option value="hi">हिंदी (Hindi)</option>
+                <option value="mr">मराठी (Marathi)</option>
+            </select>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header" id="sidebar-header-text">
+                Subtopics
+            </div>
+            <ul class="topic-list" id="topic-list">
+                
+                </ul>
+        </aside>
+
+        <main class="content-area" id="content-area">
+            <div class="placeholder-text">
+                <i class="fas fa-hand-pointer" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i><br>
+                Please select a subtopic from the menu to start learning.
+            </div>
+        </main>
+    </div>
+</body>
+</html>

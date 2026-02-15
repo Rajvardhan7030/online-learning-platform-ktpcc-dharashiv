@@ -1,0 +1,57 @@
+
+*{
+    color: white;
+}
+a{
+    padding-top: 0px;
+    color: white;
+}
+body {
+    margin: 0;
+    background: #0d1117;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.topbar {
+    height: 50px;
+    background: #0067f6;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+select, button {
+    padding: 8px;
+    background: #21262d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+
+button:hover {
+    background: #30363d;
+    cursor: pointer;
+}
+
+#editor {
+    height: 500px;
+    border-top: 1px solid #30363d;
+}
+
+.output {
+    background: #010409;
+    padding: 10px;
+    height: 40vh;
+    overflow: auto;
+}
+
+pre {
+    color: #58a6ff;
+}
