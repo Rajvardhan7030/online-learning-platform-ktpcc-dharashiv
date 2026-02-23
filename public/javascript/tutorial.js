@@ -83,8 +83,8 @@
             renderActionPanel(topicName);
         }
 
-        /**
-         * Renders the 3 action cards (Video, Docs, Podcast) for a selected topic
+       /**
+         * Renders the 4 action cards (Video, Docs, Podcast, IDE) for a selected topic
          */
         function renderActionPanel(topicName) {
             const htmlContent = `
@@ -103,12 +103,16 @@
                             <i class="fas fa-podcast"></i>
                             <span>Listen Podcast</span>
                         </a>
+                        <a href="#" onclick="openIDE(event)" class="action-card" style="border-color: #0067f6;">
+                            <i class="fas fa-laptop-code" style="color: #0067f6;"></i>
+                            <span>Practice in IDE</span>
+                        </a>
                     </div>
                 </div>
             `;
             contentAreaElement.innerHTML = htmlContent;
         }
-
+        
         /**
          * Resets the content area back to the placeholder state
          */
@@ -136,4 +140,16 @@
         // 5. Initial Render on Page Load
         renderSubtopics();
 
+        // the Bridge Script to tutorial.html
+        function openIDE(event) {
+            event.preventDefault(); 
+            const userData = localStorage.getItem('ide_user');
+            if (userData) {
+                const encodedData = encodeURIComponent(userData);
+                window.open(`http://localhost:3000/?auth=${encodedData}`, '_blank');
+            } else {
+                window.open('http://localhost:3000', '_blank');
+            }
+        }
+    
     
