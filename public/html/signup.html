@@ -3,39 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>signup</title>
+    <title>Sign Up - E-learn</title>
+    <style>
+        .message { margin-top: 10px; font-weight: bold; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
 </head>
-<body><form action="signup.php">
+<body>
+    <form id="signupForm">
+        <h2>Register</h2>
+        
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <input type="submit" value="Register">
+        
+        <div id="statusMessage" class="message"></div>
+        <br>
+        <p>Already have an account? <a href="/public/html/login.html">Login</a></p>
+    </form>
 
-    <label for="fname">
-        First name:
-        <input type="text" id="fname" name="fname">
-    </label>
-    <label for="midlename">
-        middle name:
-        <input type="text" id="midlename" name="midlename">
-    </label>
-    <label for="lname">
-        Last name:
-        <input type="text" id="lname" name="lname">
-    </label>
-    <br>
-    <label for="email">
-        Email:
-        <input type="email" id="email" name="email">
-    </label>
-    <br>
-    <label for="username">
-        Username:
-        <input type="text" id="username" name="username">
-    </label>
-    <br>
-    <label for="password">
-        Password:
-        <input type="password" id="password" name="password">
-    </label>
-    <br>
-    <input type="submit" value="Register">
-</form>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop the page from refreshing
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const statusDiv = document.getElementById('statusMessage');
+
+            statusDiv.textContent = "Registering...";
+            statusDiv.className = "message";
+
+            try {
+                // Send data to the Node.js server we built earlier
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusDiv.textContent = "Success! Redirecting to login...";
+                    statusDiv.className = "message success";
+                    
+                    // Save the user data to localStorage just like we did in React
+                    localStorage.setItem('ide_user', JSON.stringify(data));
+                    
+                    // Redirect to dashboard after 1.5 seconds
+                    setTimeout(() => {
+                        window.location.href = '/public/html/dashboard.html';
+                    }, 1500);
+                } else {
+                    statusDiv.textContent = data.message || "Registration failed.";
+                    statusDiv.className = "message error";
+                }
+            } catch (error) {
+                statusDiv.textContent = "Error connecting to server. Is Node.js running?";
+                statusDiv.className = "message error";
+            }
+        });
+    </script>
 </body>
 </html>
