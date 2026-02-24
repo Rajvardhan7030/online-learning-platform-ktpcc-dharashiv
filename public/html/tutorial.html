@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="/public/css/tutorial.css">
 </head>
 <body>
-   <div class="navbar"> 
-        <img id="logo-img" src="../../image/logo.png" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+    <!-- the navigation bar -->
+       <div class="navbar"> 
+        <img id="logo-img" src="/image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
         <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
         
         <a href="../../index.html">Home</a>
@@ -22,27 +23,50 @@
         <button class="logout-btn" onclick="logout()" style="margin-left: auto;">Logout</button>
     </div>
 
-    <div class="dashboard-container">
+<!-- sub topic container  -->
+<div class="dashboard-container" style="display: flex; height: calc(100vh - 60px);">
         
         <aside class="sidebar">
+            <div class="language-controls">
+                <div class="control-group">
+                    <label for="prog-lang-select">Course:</label>
+                    <select id="prog-lang-select" class="styled-select">
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="htmlcss">HTML & CSS</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="site-lang-select">Language:</label>
+                    <select id="site-lang-select" class="styled-select">
+                        <option value="en">English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="mr">Marathi</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="sidebar-header" id="sidebar-header-text">
                 Subtopics
             </div>
             <ul class="topic-list" id="topic-list">
-                
                 </ul>
         </aside>
 
-        <main class="content-area" id="content-area">
+        <main class="content-area" id="content-area" style="flex: 1; padding: 20px; overflow-y: auto;">
             <div class="placeholder-text">
                 <i class="fas fa-hand-pointer" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i><br>
                 Please select a subtopic from the menu to start learning.
             </div>
         </main>
+
     </div>
+    
     <!-- =================================================
                 script
-    ================================================= -->
+    =================================================  -->
     <script src="/public/javascript/tutorial.js">
 
     </script>
