@@ -8,21 +8,31 @@
     <script src="/public/javascript/index.js"></script>
 </head>
 <body> 
-<div class ="navbar"> 
+<body>
+    <div class="navbar"> 
+        <img id="logo-img" src="./image/logo.png" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+        <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
+        
+        <a href="index.html">Home</a>
+        <a href="public/html/tutorial.html">Tutorial</a>
+        <a href="#" onclick="openIDE(event)">Console</a>
+        
+        <a href="public/html/login.html" class="btn" style="margin-left: auto; margin-right: 10px;">Login</a>
+        <a href="public/html/signup.html" class="btn" style="background-color: #333;">Sign up</a>
+    </div>
 
-  <img id="logo-img" src="image/logo.jpeg" alt="logo">
-  <span id="logo-name1">E-</span><span id="logo-name2">learn </span>
-  <a href="public/html/dashboard.html">dashboard</a>
-  <a href="public/html/tutorial.html">tutorial</a>
-  <a href="http://localhost:3000" target="_blank">Console</a>
-  <a href="/public/html/login.html">login</a>
-  <button class="profile-wrapper"><img class="profile-img" src="https://www.freepik.com/free-vector/user-circles-set_145856997.htm#fromView=keyword&page=1&position=0&uuid=343afb09-24e5-40eb-9f5b-704ecc0755d4&query=Circle+avatar" alt="p"></button>
-
-</div>
-<div>
-
-</div>
-  
+    <script>
+        function openIDE(event) {
+            event.preventDefault(); 
+            const userData = localStorage.getItem('ide_user');
+            if (userData) {
+                const encodedData = encodeURIComponent(userData);
+                window.open(`http://localhost:3000/?auth=${encodedData}`, '_blank');
+            } else {
+                window.open('http://localhost:3000', '_blank');
+            }
+        }
+    </script>
 
 </body>
 </html>

@@ -3,37 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeLearn Dashboard</title>
+    <title>E-Learn Tutorials</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="/public/css/tutorial.css">
+    
+    <link rel="stylesheet" href="/public/css/home.css">
+    
+    <link rel="stylesheet" href="/public/css/tutorial.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-left">
-            <a href="#" class="logo">
-                <i class="fas fa-code"></i> E-learn
-            </a>
-            <div class="nav-links">
-                <a href="/public/html/dashboard.html">Dashboard</a>
-                <a href="/index.html">Home</a>
-                <a href="#" onclick="openIDE(event)">Console</a>
-            </div>
-        </div>
-        <div class="nav-right">
-            <select id="prog-lang-select">
-                <option value="javascript" selected>JavaScript</option>
-                <option value="htmlcss">HTML & CSS</option>
-                <option value="java">Java</option>
-                <option value="python">Python</option>
-                <option value="c">C</option>
-            </select>
-            <select id="site-lang-select">
-                <option value="en" selected>English</option>
-                <option value="hi">हिंदी (Hindi)</option>
-                <option value="mr">मराठी (Marathi)</option>
-            </select>
-        </div>
-    </nav>
+   <div class="navbar"> 
+        <img id="logo-img" src="../../image/logo.png" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+        <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
+        
+        <a href="../../index.html">Home</a>
+        <a href="/public/html/dashboard.html">Dashboard</a>
+        <a href="#" onclick="openIDE(event)">Console</a>
+        
+        <button class="logout-btn" onclick="logout()" style="margin-left: auto;">Logout</button>
+    </div>
 
     <div class="dashboard-container">
         
