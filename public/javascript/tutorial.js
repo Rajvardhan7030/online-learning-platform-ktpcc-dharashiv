@@ -23,60 +23,76 @@ const topicsData = {
         },
 
       
+      // --- 2. HTML STRUCTURE ---
         { 
             title: "2. HTML Fundamentals & Document Structure", 
             youtubeUrlEn: "", 
+            docTextEn: "<h4>The Boilerplate</h4><p>Every HTML document needs <code>&lt;!DOCTYPE html&gt;</code>, a <code>&lt;head&gt;</code> for metadata, and a <code>&lt;body&gt;</code> for visible content.</p>",
+            podcastEn: "/public/audio/html-structure-en.mp3", 
+            
             youtubeUrlHi: "", 
-            docTextEn: "<p>Content coming soon...</p>",
-             docTextHi: "<p>जल्द आ रहा है...</p>", 
-            podcastEn: "#",
-             podcastHi: "#" 
+            docTextHi: "<h4>HTML संरचना</h4><p>प्रत्येक HTML दस्तावेज़ को एक मानक संरचना की आवश्यकता होती है।</p>",
+            podcastHi: "/public/audio/html-structure-hi.mp3" 
         },
-       { 
-           title: "3. Content & Inline Elements", 
+
+        // --- 3. INLINE ELEMENTS ---
+        { 
+            title: "3. Content & Inline Elements", 
             youtubeUrlEn: "", 
+            docTextEn: "<h4>Text Formatting</h4><p>Use <code>&lt;strong&gt;</code> for bold text, <code>&lt;em&gt;</code> for italics, and <code>&lt;a&gt;</code> for hyperlinks.</p>",
+            podcastEn: "/public/audio/html-inline-en.mp3", 
+
             youtubeUrlHi: "", 
-            docTextEn: "<p>Content coming soon...</p>",
-             docTextHi: "<p>जल्द आ रहा है...</p>", 
-            podcastEn: "#",
-             podcastHi: "#" 
+            docTextHi: "<h4>इनलाइन तत्व</h4><p>टेक्स्ट को स्वरूपित करने के लिए इन टैग्स का उपयोग करें।</p>",
+            podcastHi: "/public/audio/html-inline-hi.mp3" 
         },
-         { 
-           title: "4. Structural & Semantic HTML + Multimedia + Forms", 
+
+        // --- 4. SEMANTIC HTML ---
+        { 
+            title: "4. Structural & Semantic HTML + Forms", 
             youtubeUrlEn: "", 
+            docTextEn: "<h4>Semantic Tags</h4><p>Tags like <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, and <code>&lt;footer&gt;</code> make your code readable and accessible.</p>",
+            podcastEn: "/public/audio/html-semantic-en.mp3", 
+
             youtubeUrlHi: "", 
-            docTextEn: "<p>Content coming soon...</p>",
-             docTextHi: "<p>जल्द आ रहा है...</p>", 
-            podcastEn: "#",
-             podcastHi: "#" 
+            docTextHi: "<h4>सिमेंटिक HTML</h4><p>ये टैग ब्राउज़र को सामग्री का अर्थ बताते हैं।</p>",
+            podcastHi: "/public/audio/html-semantic-hi.mp3" 
         },
-         
+
+        // --- 5. CSS BASICS ---
         { 
             title: "5. CSS Fundamentals & Styling Basics", 
             youtubeUrlEn: "", 
+            docTextEn: "<h4>CSS Selectors</h4><p>CSS is used to style HTML. You can select elements by Tag, <code>.class</code>, or <code>#id</code>.</p>",
+            podcastEn: "/public/audio/css-basics-en.mp3", 
+
             youtubeUrlHi: "", 
-            docTextEn: "<p>Content coming soon...</p>",
-             docTextHi: "<p>जल्द आ रहा है...</p>", 
-            podcastEn: "#",
-             podcastHi: "#"  
+            docTextHi: "<h4>CSS मूल बातें</h4><p>CSS का उपयोग HTML को स्टाइल करने के लिए किया जाता है।</p>",
+            podcastHi: "/public/audio/css-basics-hi.mp3" 
         },
+
+        // --- 6. CSS LAYOUT ---
         { 
             title: "6. Layout & Positioning", 
             youtubeUrlEn: "", 
+            docTextEn: "<h4>Flexbox and Grid</h4><p>Modern layouts use Flexbox for 1D alignments and CSS Grid for 2D complex layouts.</p>",
+            podcastEn: "/public/audio/css-layout-en.mp3", 
+
             youtubeUrlHi: "", 
-            docTextEn: "<p>Content coming soon...</p>",
-             docTextHi: "<p>जल्द आ रहा है...</p>", 
-            podcastEn: "#",
-             podcastHi: "#" 
+            docTextHi: "<h4>लेआउट</h4><p>आधुनिक वेब डिज़ाइन में Flexbox और Grid का उपयोग होता है।</p>",
+            podcastHi: "/public/audio/css-layout-hi.mp3" 
         },
+
+        // --- 7. RESPONSIVE DESIGN ---
         { 
-            title: "7. Responsive Design & Modern Features",
+            title: "7. Responsive Design & Modern Features", 
             youtubeUrlEn: "", 
-            youtubeUrlHi: "", 
-            docTextEn: "<p>Content coming soon...</p>",
-             docTextHi: "<p>जल्द आ रहा है...</p>", 
-            podcastEn: "#",
-             podcastHi: "#" 
+            docTextEn: "<h4>Media Queries</h4><p>Use <code>@media (max-width: 768px)</code> to change styles on mobile devices.</p>",
+            podcastEn: "/public/audio/css-responsive-en.mp3", 
+
+            youtubeUrlHi: "https://www.youtube.com/embed/1Rs2ND1ryYc?start=3500&end=3600", 
+            docTextHi: "<h4>रेस्पॉन्सिव डिज़ाइन</h4><p>मोबाइल उपकरणों पर वेबसाइट को सही दिखाने के लिए मीडिया क्वेरीज़ का उपयोग करें।</p>",
+            podcastHi: "/public/audio/css-responsive-hi.mp3" 
         }
     ],
 
@@ -219,3 +235,60 @@ function openIDE(event) {
 
 // Initialize
 renderSubtopics();
+// ==========================================
+// 4. Modal Functions with Graceful Fallbacks
+// ==========================================
+
+function openVideoModal(videoUrl, title) {
+    // 1. Check if the video URL is missing or just a placeholder
+    if (!videoUrl || videoUrl === '#' || videoUrl.includes('YOUR_HINDI_VIDEO_ID')) {
+        alert("This video is currently being recorded and will be available soon!");
+        return; // Stop the modal from opening
+    }
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('youtubeFrame').src = videoUrl;
+    document.getElementById('videoModal').style.display = "block";
+}
+
+function closeVideoModal() {
+    document.getElementById('videoModal').style.display = "none";
+    document.getElementById('youtubeFrame').src = "";
+}
+
+function openDocModal(title, encodedText) {
+    const text = decodeURIComponent(encodedText);
+    // 2. Check if the doc is just the placeholder text
+    if (!text || text.includes('coming soon') || text.includes('जल्द आ रहा है')) {
+         alert("The documentation for this topic is currently being written by our AI. Check back later!");
+         return;
+    }
+    document.getElementById('docModalTitle').textContent = title + " - Notes";
+    document.getElementById('docContent').innerHTML = text;
+    document.getElementById('docModal').style.display = "block";
+}
+
+function closeDocModal() {
+    document.getElementById('docModal').style.display = "none";
+}
+
+function openPodcastModal(title, audioUrl) {
+    // 3. Check if the audio file is missing
+    if (!audioUrl || audioUrl === '#') {
+        alert("The AI is currently generating the podcast for this topic. Please check back later!");
+        return;
+    }
+    document.getElementById('podcastModalTitle').textContent = title + " - Audio Lesson";
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    audioPlayer.src = audioUrl;
+    document.getElementById('podcastModal').style.display = "block";
+    
+    audioPlayer.play().catch(e => console.log("Autoplay prevented by browser, waiting for user click."));
+}
+
+function closePodcastModal() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+    document.getElementById('podcastModal').style.display = "none";
+}
