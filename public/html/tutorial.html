@@ -63,7 +63,27 @@
         </main>
 
     </div>
-    
+<!-- this is the modal for video display -->
+    <div id="videoModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeVideoModal()">&times;</span>
+            <h3 id="modalTitle" style="color: var(--primary-color); margin-bottom: 15px;">Loading Video...</h3>
+            <div class="video-container">
+                <iframe id="youtubeFrame" width="100%" height="450" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- doc model for video modal -->
+
+    <div id="docModal" class="modal" style="display: none;">
+        <div class="modal-content doc-modal-content">
+            <span class="close-btn" onclick="closeDocModal()">&times;</span>
+            <h3 id="docModalTitle" style="color: var(--primary-color); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Loading Document...</h3>
+            <div id="docContent" class="doc-container">
+                </div>
+        </div>
+    </div>
     <!-- =================================================
                 script
     =================================================  -->

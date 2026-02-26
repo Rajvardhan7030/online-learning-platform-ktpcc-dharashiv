@@ -317,4 +317,79 @@
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(0, 103, 246, 0.2);
 }
-   
+
+/* =========================================
+   Video Modal Styling
+   ========================================= */
+.modal {
+    position: fixed;
+    z-index: 2000; /* Sit on top of everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8); /* Dark overlay */
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--bg-white);
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    animation: modalFadeIn 0.3s ease;
+}
+
+.close-btn {
+    color: #999;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover { color: #ff4d4d; }
+
+.video-container {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #000;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+   /* =========================================
+   Document Modal Specifics
+   ========================================= */
+.doc-modal-content {
+    max-width: 600px; /* Thinner than video for better reading */
+}
+
+.doc-container {
+    text-align: left;
+    line-height: 1.8;
+    color: #444;
+    max-height: 60vh; /* Prevents it from going off screen */
+    overflow-y: auto; /* Adds a scrollbar if text is long */
+    padding-right: 15px;
+}
+
+.doc-container h4 { color: var(--text-dark); margin-top: 15px; }
+.doc-container p { margin-bottom: 15px; }
+.doc-container pre { 
+    background-color: #f1f3f5; 
+    padding: 10px; 
+    border-radius: 5px; 
+    overflow-x: auto;
+    font-family: monospace;
+    border-left: 4px solid var(--primary-color);
+}
