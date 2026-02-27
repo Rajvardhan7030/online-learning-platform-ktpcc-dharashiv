@@ -17,7 +17,29 @@
         <a href="/public/html/tutorial.html">Tutorials</a>
         <a href="#" onclick="openIDE(event)">Console</a>
         
-        <button class="logout-btn" onclick="logout()" style="margin-left: auto;">Logout</button>
+        <div class="nav-auth-section" style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
+            <div id="auth-buttons">
+                <a href="/public/html/login.html" class="btn login-btn">Sign In</a>
+                <a href="/public/html/signup.html" class="btn signup-btn" style="background-color: var(--primary-color, #0067f6); color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">Sign Up</a>
+            </div>
+
+            <div id="profile-menu" class="nav-profile" style="display: none;">
+                <div class="profile-btn" onclick="toggleDropdown()">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <strong id="display-name">Developer</strong>
+                        <span id="display-email">student@university.edu</span>
+                    </div>
+                    <hr>
+                    <a href="/public/html/dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <hr>
+                    <a href="#" onclick="logout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <main class="dashboard-main">
@@ -26,7 +48,6 @@
                 <h1 id="welcome-message">Welcome back, Developer! 👋</h1>
                 <p>Track your learning progress and pick up exactly where you left off.</p>
             </div>
-            
             <button onclick="resetProgress()" class="reset-btn" title="Reset all progress for presentations">
                 <i class="fas fa-redo"></i> Reset Progress
             </button>
@@ -75,22 +96,7 @@
         </section>
     </main>
 
-    <script>
-        function openIDE(event) {
-            event.preventDefault(); 
-            const userData = localStorage.getItem('ide_user');
-            if (userData) {
-                const encodedData = encodeURIComponent(userData);
-                window.open(`http://localhost:3000/?auth=${encodedData}`, '_blank');
-            } else {
-                window.open('http://localhost:3000', '_blank');
-            }
-        }
-
-        function logout() {
-            window.location.href = '../../index.html';
-        }
-    </script>
+    <script src="/public/javascript/index.js"></script>
     <script src="/public/javascript/dashboard.js"></script>
 </body>
 </html>

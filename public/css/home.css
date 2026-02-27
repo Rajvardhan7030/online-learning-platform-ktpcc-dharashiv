@@ -84,3 +84,98 @@ body {
 /* Red Logout Button override */
 .logout-btn { background-color: #ff4d4d !important; }
 .logout-btn:hover { background-color: #cc0000 !important; }
+/* =========================================
+   Profile Dropdown Menu
+   ========================================= */
+.nav-profile {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-btn {
+    font-size: 2.2rem;
+    color: var(--primary-color, #0067f6);
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.profile-btn:hover {
+    transform: scale(1.05);
+    color: #0056b3;
+}
+
+.profile-dropdown {
+    display: none; /* Hidden by default */
+    position: absolute;
+    right: 0;
+    top: 120%; /* Pushes it just below the navbar */
+    background-color: white;
+    min-width: 220px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    border: 1px solid #eee;
+    z-index: 2000;
+    overflow: hidden;
+    animation: dropFadeIn 0.2s ease;
+}
+
+/* This class is added via JavaScript to show the menu */
+.profile-dropdown.show {
+    display: block; 
+}
+
+.dropdown-header {
+    padding: 15px;
+    background-color: #f8f9fa;
+    text-align: left;
+}
+
+.dropdown-header strong {
+    display: block;
+    color: #333;
+    font-size: 1rem;
+}
+
+.dropdown-header span {
+    display: block;
+    color: #777;
+    font-size: 0.8rem;
+    margin-top: 3px;
+}
+
+.profile-dropdown a {
+    padding: 12px 15px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #444;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+}
+
+.profile-dropdown a:hover {
+    background-color: #f1f3f5;
+    color: var(--primary-color, #0067f6);
+}
+
+.profile-dropdown hr {
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.logout-link {
+    color: #dc3545 !important; /* Red for destructive action */
+}
+
+.logout-link:hover {
+    background-color: #fff5f5 !important;
+}
+
+@keyframes dropFadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
