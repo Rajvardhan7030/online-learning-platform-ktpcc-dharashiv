@@ -135,6 +135,19 @@ function renderSubtopics() {
 function renderActionPanel(topicObj, suffix, langCode) {
     const displayName = topicObj.title + suffix;
     
+    // ==========================================
+    // NEW: Progress Tracking Logic
+    // ==========================================
+    // 1. Get existing progress from Local Storage (or create an empty array)
+    let completedTopics = JSON.parse(localStorage.getItem('completed_htmlcss')) || [];
+    
+    // 2. If this topic isn't in the array yet, add it!
+    if (!completedTopics.includes(topicObj.title)) {
+        completedTopics.push(topicObj.title);
+        localStorage.setItem('completed_htmlcss', JSON.stringify(completedTopics));
+    }
+    // ==========================================
+
     // 1. Set Defaults (English)
     let podcastLink = topicObj.podcastEn;
     let videoLink = topicObj.youtubeUrlEn;

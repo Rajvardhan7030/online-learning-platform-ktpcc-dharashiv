@@ -3,135 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - E-learn</title>
+    <title>Dashboard - E-Learn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/public/css/home.css">
-    <style>
-        /* Dashboard specific styling */
-        body {
-            background-color: #f8f9fa;
-            color: #333;
-            font-family: Arial, sans-serif;
-        }
-        .dashboard-container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-        .welcome-header {
-            font-size: 2.5em;
-            color: #0067f6;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 10px;
-        }
-        .cards-grid {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 300px;
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            border: 1px solid #0067f6;
-        }
-        .card h3 {
-            color: #0067f6;
-            margin-bottom: 15px;
-        }
-        .logout-btn {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-        .logout-btn:hover {
-            background-color: #cc0000;
-        }
-    </style>
+    <link rel="stylesheet" href="/public/css/dashboard.css">
 </head>
 <body>
-
     <div class="navbar"> 
         <img id="logo-img" src="/image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
         <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
-        <a href="/index.html">Home</a>
-        <a href="/public/html/tutorial.html">Tutorial</a>
-        <a href="#" onclick="openIDE(event)" class="card">console</a>
-        <button class="logout-btn" onclick="logout()" style="float: right; margin: 5px 20px 0 0;">Logout</button>
+        
+        <a href="../../index.html">Home</a>
+        <a href="/public/html/tutorial.html">Tutorials</a>
+        <a href="#" onclick="openIDE(event)">Console</a>
+        
+        <button class="logout-btn" onclick="logout()" style="margin-left: auto;">Logout</button>
     </div>
 
-    <div class="dashboard-container">
-        <h2 id="welcomeMessage" class="welcome-header">Loading...</h2>
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <h1 id="welcome-message">Welcome back, Developer! 👋</h1>
+            <p>Track your learning progress and pick up exactly where you left off.</p>
+        </header>
 
-        <div class="cards-grid">
-            <a href="/public/html/tutorial.html" class="card">
-                <h3>📖 Continue Learning</h3>
-                <p>Pick up where you left off in the JavaScript, HTML, or Python tutorials.</p>
-            </a>
+        <section class="progress-section">
+            <h2 class="section-title">Your Courses</h2>
             
-            <a href="#" onclick="openIDE(event)" class="card">
-                <h3>💻 Open IDE Console</h3>
-                <p>Launch the coding sandbox to practice your skills and save code snippets.</p>
-            </a>
-        </div>
-    </div>
+            <div class="course-cards">
+                <div class="course-card active-card">
+                    <div class="course-icon" style="color: #e34f26;"><i class="fab fa-html5"></i></div>
+                    <div class="course-info">
+                        <h3>HTML & CSS Fundamentals</h3>
+                        <p>Progress: <span id="html-progress-text">0%</span> (0 / 7 Topics)</p>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="html-progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <a href="/public/html/tutorial.html" class="continue-btn">Continue Learning</a>
+                </div>
+
+                <div class="course-card disabled-card">
+                    <div class="course-icon" style="color: #f7df1e;"><i class="fab fa-js-square"></i></div>
+                    <div class="course-info">
+                        <h3>JavaScript Essentials</h3>
+                        <p>Module in development</p>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <button class="continue-btn" disabled>Coming Soon</button>
+                </div>
+                
+                <div class="course-card disabled-card">
+                    <div class="course-icon" style="color: #3776ab;"><i class="fab fa-python"></i></div>
+                    <div class="course-info">
+                        <h3>Python Backend</h3>
+                        <p>Module in development</p>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <button class="continue-btn" disabled>Coming Soon</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script>
-        // Check if the user is logged in
-        const userData = localStorage.getItem('ide_user');
-
-        if (!userData) {
-            // Kick them to login if there is no token
-            window.location.href = '/public/html/login.html';
-        } else {
-            // Parse the data and update the welcome message
-            const user = JSON.parse(userData);
-            const welcomeTag = document.getElementById('welcomeMessage');
-            
-            // Capitalize the first letter of their username for a nice touch
-            const name = user.username.charAt(0).toUpperCase() + user.username.slice(1);
-            welcomeTag.textContent = `Welcome back, ${name}!`;
-        }
-
-        // Logout function
-        function logout() {
-            // Remove the token
-            localStorage.removeItem('ide_user');
-            // Redirect to home or login page
-            window.location.href = '/public/html/login.html';
-        }
-        // The Auth Bridge Function
         function openIDE(event) {
-            event.preventDefault(); // Stop the default link click
-            
+            event.preventDefault(); 
             const userData = localStorage.getItem('ide_user');
             if (userData) {
-                // Encode the login data securely for the URL
                 const encodedData = encodeURIComponent(userData);
-                // Open the IDE and pass the data in the URL
                 window.open(`http://localhost:3000/?auth=${encodedData}`, '_blank');
             } else {
-                // If not logged in, just open it normally
                 window.open('http://localhost:3000', '_blank');
             }
         }
-    </script>
 
+        function logout() {
+            window.location.href = '../../index.html';
+        }
+    </script>
+    <script src="/public/javascript/dashboard.js"></script>
 </body>
 </html>
