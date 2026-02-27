@@ -393,3 +393,15 @@
     font-family: monospace;
     border-left: 4px solid var(--primary-color);
 }
+/* =========================================
+   Podcast Modal Specifics
+   ========================================= */
+.podcast-modal-content {
+    max-width: 400px; /* Small, compact width for the audio player */
+    border-top: 5px solid var(--primary-color);
+}
+
+.audio-container audio {
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}

@@ -165,7 +165,7 @@ function renderActionPanel(topicObj, suffix, langCode) {
                     <span>Read Documentation</span>
                 </a>
                 
-                <a href="${podcastLink}" class="action-card">
+               <a href="#" onclick="openPodcastModal('${topicObj.title}', '${podcastLink}')" class="action-card">
                     <i class="fas fa-podcast"></i>
                     <span>Listen Podcast</span>
                 </a>
@@ -288,6 +288,31 @@ function openPodcastModal(title, audioUrl) {
 
 function closePodcastModal() {
     const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+    document.getElementById('podcastModal').style.display = "none";
+}
+// Podcast Modal Functions
+function openPodcastModal(title, audioUrl) {
+    if (!audioUrl || audioUrl === '#') {
+        alert("Podcast for this topic is coming soon!");
+        return;
+    }
+    
+    document.getElementById('podcastModalTitle').textContent = title + " - Audio Lesson";
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    // Set the source and play
+    audioPlayer.src = audioUrl;
+    document.getElementById('podcastModal').style.display = "block";
+    
+    // Auto-play the podcast when opened
+    audioPlayer.play().catch(e => console.log("Autoplay prevented by browser, waiting for user click."));
+}
+
+function closePodcastModal() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    // Pause the audio and reset it to the beginning
     audioPlayer.pause();
     audioPlayer.currentTime = 0;
     document.getElementById('podcastModal').style.display = "none";
