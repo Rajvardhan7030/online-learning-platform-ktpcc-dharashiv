@@ -21,9 +21,15 @@
     </div>
 
     <main class="dashboard-main">
-        <header class="dashboard-header">
-            <h1 id="welcome-message">Welcome back, Developer! 👋</h1>
-            <p>Track your learning progress and pick up exactly where you left off.</p>
+       <header class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h1 id="welcome-message">Welcome back, Developer! 👋</h1>
+                <p>Track your learning progress and pick up exactly where you left off.</p>
+            </div>
+            
+            <button onclick="resetProgress()" class="reset-btn" title="Reset all progress for presentations">
+                <i class="fas fa-redo"></i> Reset Progress
+            </button>
         </header>
 
         <section class="progress-section">

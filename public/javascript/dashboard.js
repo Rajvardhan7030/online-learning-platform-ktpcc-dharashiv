@@ -26,3 +26,13 @@ window.onload = function() {
     // Update the text to show exact numbers
     courseInfoParagraph.innerHTML = `Progress: <span id="html-progress-text">${progressPercentage}%</span> (${completedCount} / ${TOTAL_HTML_TOPICS} Topics)`;
 };
+// 4. Reset Progress Function (Perfect for presentations!)
+function resetProgress() {
+    // Show a quick confirmation pop-up just in case it was clicked accidentally
+    if(confirm("Are you sure you want to reset your HTML & CSS progress?")) {
+        // Clear the specific memory key
+        localStorage.removeItem('completed_htmlcss');
+        // Refresh the page to visually reset the bar to 0%
+        window.location.reload(); 
+    }
+}
