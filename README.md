@@ -44,16 +44,14 @@ This project utilizes a distributed micro-architecture, running across distinct 
 Containerizing the environment ensures it runs flawlessly regardless of your operating system. *Note: You must have Docker Desktop installed and running.*
 
 1. **Clone the repository:**
+
    ```bash
    git clone [https://github.com/yourusername/online-learning-platform.git](https://github.com/yourusername/online-learning-platform.git)
    cd online-learning-platform
 
-```
-
-2. **Start the Main Ecosystem (Site, Backend, Database):**
+3. **Start the Main Ecosystem (Site, Backend, Database):**
 ```bash
 docker compose up --build -d
-
 ```
 
 
@@ -168,6 +166,3 @@ Open the root folder in VS Code, right-click `index.html`, and select **Open wit
 * **NotebookLM:** Used to generate the localized AI podcast audio files for the educational content.
 * **Grok:** Used for research of technology and structuring the syllabus.
 
-```
-
-```
