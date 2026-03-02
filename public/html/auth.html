@@ -9,75 +9,135 @@
     <link rel="stylesheet" href="/public/css/auth.css"> </head>
 <body class="auth-body">
     
-    <div class="navbar" style="position: absolute; width: 100%; top: 0;"> 
-        <img id="logo-img" src="/image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+  <div class="navbar" style="position: absolute; width: 100%; top: 0;"> 
+        <img id="logo-img" src="/image/logo.jpeg"logo" onerror="this.src='https://via.placeholder.com/50'">
         <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
         <a href="../../index.html" style="margin-left: auto;" class="btn">Back to Home</a>
     </div>
 
-    <div class="auth-wrapper">
-        <div class="flip-container" id="flip-container">
-            <div class="flipper">
-                
-                <div class="front">
-                    <div class="form-header">
-                        <h2>Welcome Back</h2>
-                        <p>Sign in to continue your learning journey.</p>
+    <div class="auth-page-layout">
+        
+        <div class="robot-container">
+            <div class="robot" id="mascot">
+                <div class="robot-antenna"></div>
+                <div class="robot-head">
+                    <div class="robot-eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
                     </div>
-                    
-                    <form action="/api/login" method="POST" class="auth-form">
-                        <div class="input-group">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" name="email" placeholder="Email Address" required>
-                        </div>
-                        <div class="input-group">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" name="password" placeholder="Password" required>
-                        </div>
-                        <button type="submit" class="auth-btn">Sign In</button>
-                    </form>
-                    
-                    <div class="form-footer">
-                        <p>Don't have an account? <span class="flip-link" onclick="toggleFlip()">Register here</span></p>
-                    </div>
+                    <div class="robot-mouth"></div>
                 </div>
+                <div class="robot-body-part"></div>
+            </div>
+        </div>
 
-                <div class="back">
-                    <div class="form-header">
-                        <h2>Create Account</h2>
-                        <p>Join E-Learn and start coding today.</p>
-                    </div>
+        <div class="auth-wrapper">
+            <div class="flip-container" id="flip-container">
+                <div class="flipper">
                     
-                    <form action="/api/register" method="POST" class="auth-form">
-                        <div class="input-group">
-                            <i class="fas fa-user"></i>
-                            <input type="text" name="name" placeholder="Full Name" required>
+                    <div class="front">
+                        <div class="form-header">
+                            <h2>Welcome Back</h2>
+                            <p>Sign in to continue your learning journey.</p>
                         </div>
-                        <div class="input-group">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" name="email" placeholder="Email Address" required>
+                        
+                      <form id="login-form" class="auth-form">
+                            <div class="input-group">
+                                <i class="fas fa-envelope icon-left"></i>
+                                <input type="email" name="email" placeholder="Email Address" required>
+                            </div>
+                            
+                           <div class="input-group">
+                                <i class="fas fa-lock icon-left" style="pointer-events: none;"></i>
+                                <input type="password" id="login-password" name="password" placeholder="Password" required>
+                                <i id="show-btn" class="fas fa-eye icon-right" onclick="togglePassword('login-password', this)"></i>
+                            </div>
+                            
+                            <button type="submit" class="auth-btn">Sign In</button>
+                        </form>
+                        
+                        <div class="form-footer">
+                            <p>Don't have an account? <span class="flip-link" onclick="toggleFlip()">Register here</span></p>
                         </div>
-                        <div class="input-group">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" name="password" placeholder="Password" required>
-                        </div>
-                        <button type="submit" class="auth-btn">Sign Up</button>
-                    </form>
-                    
-                    <div class="form-footer">
-                        <p>Already have an account? <span class="flip-link" onclick="toggleFlip()">Sign In here</span></p>
                     </div>
+
+                    <div class="back">
+                        <div class="form-header">
+                            <h2>Create Account</h2>
+                            <p>Join E-Learn and start coding today.</p>
+                        </div>
+                        
+                    <form id="register-form" class="auth-form">
+                            <div class="input-group">
+                                <i class="fas fa-user icon-left"></i>
+                                <input type="text" name="username" placeholder="Full Name" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-envelope icon-left"></i>
+                                <input type="email" name="email" placeholder="Email Address" required>
+                            </div>
+                            
+                          <div class="input-group">
+                                <i class="fas fa-lock icon-left" style="pointer-events: none;"></i>
+                                <input type="password" id="register-password" name="password" placeholder="Password" required>
+                                <i id="show-btn"  class="fas fa-eye icon-right" onclick="togglePassword('register-password', this)"></i>
+                            </div>
+                            
+                            <button type="submit" class="auth-btn">Sign Up</button>
+                        </form>
+                        
+                        <div class="form-footer">
+                            <p>Already have an account? <span class="flip-link" onclick="toggleFlip()">Sign In here</span></p>
+                        </div>
+                    </div>
+
                 </div>
-
             </div>
         </div>
     </div>
 
     <script>
+        // 1. Flip the card & make robot excited
         function toggleFlip() {
             const container = document.getElementById('flip-container');
+            const robot = document.getElementById('mascot');
+            
             container.classList.toggle('flipped');
+            
+            // If we flip to the back (Register), make the robot jump!
+            if (container.classList.contains('flipped')) {
+                robot.classList.add('excited');
+            } else {
+                robot.classList.remove('excited');
+            }
+        }
+
+        // 2. Toggle password visibility & make robot close eyes
+        function togglePassword(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            const robot = document.getElementById('mascot');
+
+            if (input.type === "password") {
+                // Show password
+                input.type = "text";
+                iconElement.classList.remove('fa-eye');
+                iconElement.classList.add('fa-eye-slash');
+                robot.classList.add('blindfold'); // Robot closes eyes
+            } else {
+                // Hide password
+                input.type = "password";
+                iconElement.classList.remove('fa-eye-slash');
+                iconElement.classList.add('fa-eye');
+                
+                // Only open eyes if the OTHER password field isn't also visible
+                const otherInputId = inputId === 'login-password' ? 'register-password' : 'login-password';
+                const otherInput = document.getElementById(otherInputId);
+                if (otherInput.type === "password") {
+                    robot.classList.remove('blindfold'); 
+                }
+            }
         }
     </script>
+    <script src="/public/javascript/auth.js"></script>
 </body>
 </html>
