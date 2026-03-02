@@ -18,9 +18,9 @@
         
         <div class="nav-auth-section" style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
             
-            <div id="auth-buttons">
-                <a href="/public/html/login.html" class="btn login-btn">Sign In</a>
-                <a href="/public/html/signup.html" class="btn signup-btn" style="background-color: var(--primary-color, #0067f6); color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;">Sign Up</a>
+          <div id="auth-buttons">
+                <a href="/public/html/auth.html" class="btn login-btn" >Sign In</a>
+                <a href="/public/html/auth.html" class="btn signup-btn" >Sign Up</a>
             </div>
 
             <div id="profile-menu" class="nav-profile" style="display: none;">
@@ -43,20 +43,6 @@
 
         </div>
     </div>
-
-    <script>
-        function openIDE(event) {
-            event.preventDefault(); 
-            const userData = localStorage.getItem('ide_user');
-            if (userData) {
-                const encodedData = encodeURIComponent(userData);
-                window.open(`http://localhost:3000/?auth=${encodedData}`, '_blank');
-            } else {
-                window.open('http://localhost:3000', '_blank');
-            }
-        }
-    </script>
-    
     <script src="/public/javascript/index.js"></script>
 </body>
 </html>

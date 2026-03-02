@@ -65,7 +65,7 @@ body {
 }
 
 /* Unified Buttons */
-.btn, .navbar button, input[type="submit"] {
+ .navbar button, input[type="submit"] {
     background-color: var(--primary-blue);
     color: var(--text-light);
     border: none;
@@ -100,6 +100,7 @@ body {
     display: flex;
     align-items: center;
 }
+
 
 .profile-btn:hover {
     transform: scale(1.05);
@@ -178,4 +179,11 @@ body {
 @keyframes dropFadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+.btn{
+    background-color:greenyellow; 
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+text-decoration: none;
 }

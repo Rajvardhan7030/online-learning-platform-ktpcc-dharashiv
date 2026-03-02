@@ -32,7 +32,7 @@
             
             try {
                 const userData = JSON.parse(userDataString);
-                if (userData.name) {
+                if (userData.username) {
                     document.getElementById('display-name').textContent = userData.name;
                 }
                 if (userData.email) {
@@ -56,5 +56,23 @@
             
             // Redirect them back to the main homepage (adjust the path if needed)
             window.location.href = 'index.html'; 
+        }
+    }
+    // ==========================================
+    // IDE Bridge Logic (Global)
+    // ==========================================
+    function openIDE(event) {
+        event.preventDefault(); 
+        
+        // Grab the MongoDB user token we saved during login/signup
+        const userData = localStorage.getItem('ide_user');
+        
+        if (userData) {
+            // If logged in, encode the data and send it to the React port
+            const encodedData = encodeURIComponent(userData);
+            window.open(`http://localhost:3000/?auth=${encodedData}`, '_blank');
+        } else {
+            // If logged out, just open the IDE normally
+            window.open('http://localhost:3000', '_blank');
         }
     }

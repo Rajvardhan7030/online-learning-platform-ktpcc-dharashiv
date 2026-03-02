@@ -1,0 +1,326 @@
+/* ==========================================================================
+   Auth Page Layout & Background
+   ========================================================================== */
+.auth-body {
+    background-color: #f4f7f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    /* Optional: A cool subtle background pattern */
+    background-image: radial-gradient(#0067f6 0.5px, transparent 0.5px), radial-gradient(#0067f6 0.5px, #f4f7f6 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    background-color: #f4f7f6;
+    opacity: 0.9;
+}
+
+.auth-wrapper {
+    perspective: 1000px; /* Gives the 3D depth effect */
+    width: 400px;
+    height: 500px;
+}
+
+/* ==========================================================================
+   The 3D Flip Mechanics
+   ========================================================================== */
+.flip-container {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy flip */
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+/* This class is added by JS to trigger the flip */
+.flip-container.flipped {
+    transform: rotateY(180deg);
+}
+
+.flipper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+}
+
+.front, .back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden; /* Hides the back of the card when flipped */
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* The back card starts rotated 180 degrees so it's upside down on the back */
+.back {
+    transform: rotateY(180deg);
+}
+
+/* ==========================================================================
+   Form Styling (Matches your E-Learn Theme)
+   ========================================================================== */
+.form-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.form-header p {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    border-color: #0067f6;
+    box-shadow: 0 0 0 3px rgba(0, 103, 246, 0.1);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #0067f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    background-color: #0056b3;
+}
+
+.auth-btn:active {
+    transform: scale(0.98);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.flip-link {
+    color: #0067f6;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.flip-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+/* ==========================================================================
+   Interactive Robot & Layout Adjustments
+   ========================================================================== */
+
+/* Change the main body to hold two items side-by-side */
+.auth-page-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px; /* Space between robot and form */
+    width: 100%;
+}
+
+/* Fix input padding for the eye icon */
+.input-group input {
+    padding-right: 40px; /* Make room for the eye icon */
+}
+
+.icon-left {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.icon-right {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.icon-right:hover {
+    color: #0067f6;
+}
+
+/* --- THE CSS ROBOT MASCOT --- */
+.robot-container {
+    perspective: 1000px;
+}
+
+.robot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Robot Antenna */
+.robot-antenna {
+    width: 6px;
+    height: 30px;
+    background-color: #ccc;
+    position: relative;
+}
+.robot-antenna::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -5px;
+    width: 16px;
+    height: 16px;
+    background-color: #ff4d4d;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ff4d4d;
+    animation: blink 2s infinite;
+}
+
+/* Robot Head */
+.robot-head {
+    width: 140px;
+    height: 110px;
+    background: linear-gradient(135deg, #0067f6, #004bb5);
+    border-radius: 25px;
+    box-shadow: 0 15px 25px rgba(0, 103, 246, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* Robot Eyes */
+.robot-eyes {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 15px;
+}
+
+.eye {
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+}
+
+/* Robot Mouth */
+.robot-mouth {
+    width: 40px;
+    height: 8px;
+    background-color: white;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+/* Robot Body (Neck) */
+.robot-body-part {
+    width: 40px;
+    height: 30px;
+    background-color: #ddd;
+    border-radius: 0 0 15px 15px;
+    box-shadow: inset 0 10px 10px rgba(0,0,0,0.1);
+}
+
+/* --- ROBOT ANIMATION STATES --- */
+
+/* State 1: Excited (When Register is clicked) */
+.robot.excited {
+    transform: translateY(-30px) scale(1.05); /* Jumps up */
+}
+.robot.excited .robot-mouth {
+    height: 20px; /* Big smile */
+    border-radius: 0 0 20px 20px;
+}
+
+/* State 2: Blindfolded (When Password is shown) */
+.robot.blindfold .eye {
+    height: 4px; /* Squints/closes eyes */
+    border-radius: 2px;
+    transform: translateY(12px);
+    background-color: #a3c7fc;
+}
+.robot.blindfold .robot-mouth {
+    width: 20px; /* Nervous tiny mouth */
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 850px) {
+    .auth-page-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .robot {
+        transform: scale(0.8);
+    }
+}
+/* Hide default browser password toggles */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* the show button */
+#show-btn{
+    width: 20px;
+}
