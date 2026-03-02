@@ -1,0 +1,35 @@
+services:
+  # 1. The Database
+  mongodb:
+    image: mongo:latest
+    container_name: elearn_database
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  # 2. The Node.js Backend
+  backend:
+    build: ./backend
+    container_name: elearn_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/elearning-ide 
+      - JWT_SECRET=elearn_super_secret_key_123
+    depends_on:
+      - mongodb
+    restart: on-failure
+
+  # 3. The HTML Frontend
+  frontend:
+    build: .
+    container_name: elearn_frontend
+    ports:
+      - "5500:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
