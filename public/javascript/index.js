@@ -19,35 +19,49 @@
     // Profile Data & Logout Logic
     // ==========================================
     
- // 1. Load User Data & Toggle UI State
-    document.addEventListener("DOMContentLoaded", () => {
-        const userDataString = localStorage.getItem('ide_user'); 
+// 1. Load User Data & Auto-Redirect
+document.addEventListener("DOMContentLoaded", () => {
+    const userDataString = localStorage.getItem('ide_user'); 
+    const currentPath = window.location.pathname;
+    
+    // Check if the user is exactly on the root or index.html page
+    const isWelcomePage = currentPath === '/' || currentPath.endsWith('index.html');
+    
+    if (userDataString) {
+        // ONLY redirect if they are on the welcome page. Let them browse tutorials freely!
+        if (isWelcomePage) {
+            window.location.href = '/public/html/dashboard.html';
+            return; // Stop execution so it redirects cleanly
+        }
+        
+        // For all other pages (Dashboard, Tutorial): Show profile menu, hide auth buttons
         const authButtons = document.getElementById('auth-buttons');
         const profileMenu = document.getElementById('profile-menu');
         
-        if (userDataString) {
-            // USER IS LOGGED IN: Hide buttons, show profile
+        if (authButtons && profileMenu) {
             authButtons.style.display = 'none';
             profileMenu.style.display = 'inline-block';
             
             try {
                 const userData = JSON.parse(userDataString);
-                if (userData.username) {
-                    document.getElementById('display-name').textContent = userData.username;
-                }
-                if (userData.email) {
-                    document.getElementById('display-email').textContent = userData.email;
-                }
+                if (userData.username) document.getElementById('display-name').textContent = userData.username;
+                if (userData.email) document.getElementById('display-email').textContent = userData.email;
             } catch (error) {
                 console.error("Could not parse user data.");
             }
-        } else {
-            // USER IS LOGGED OUT: Show buttons, hide profile
-            authButtons.style.display = 'block';
-            profileMenu.style.display = 'none';
         }
-    });
-
+        return; 
+    } 
+    
+    // USER IS LOGGED OUT: Ensure Auth buttons are visible
+    const authButtons = document.getElementById('auth-buttons');
+    const profileMenu = document.getElementById('profile-menu');
+    
+    if (authButtons && profileMenu) {
+        authButtons.style.display = 'block';
+        profileMenu.style.display = 'none';
+    }
+});
     // 2. The Logout Function
     function logout() {
         if(confirm("Are you sure you want to log out?")) {
