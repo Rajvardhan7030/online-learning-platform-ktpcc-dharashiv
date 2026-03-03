@@ -1,0 +1,101 @@
+/* src/App.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+.ide-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background-color: #333;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #555;
+}
+
+.header select, .header button {
+  padding: 8px 12px;
+  margin-left: 10px;
+  background-color: #444;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.header button:hover {
+  background-color: #555;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden; /* Prevents scrolling on the main wrapper */
+}
+
+.editor-section {
+  flex: 1;
+  border-right: 1px solid #555;
+}
+
+.output-section {
+  flex: 1;
+  padding: 20px;
+  background-color: #252526;
+  overflow-y: auto;
+}
+
+.output-box {
+  background-color: #000;
+  padding: 15px;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap; /* Ensures line breaks in output render correctly */
+  min-height: 200px;
+}
+/* Add to the bottom of src/App.css */
+
+.auth-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.auth-modal {
+  background-color: #252526;
+  padding: 30px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.auth-modal h3 { margin-bottom: 20px; text-align: center; }
+.auth-modal input {
+  width: 100%; padding: 10px; margin-bottom: 15px;
+  background-color: #3c3c3c; border: 1px solid #555; color: white; border-radius: 4px;
+}
+.auth-modal button {
+  width: 100%; padding: 10px; background-color: #007acc; color: white;
+  border: none; border-radius: 4px; cursor: pointer; margin-bottom: 10px;
+}
+.auth-modal button:hover { background-color: #005f9e; }
+.auth-modal .toggle-text {
+  text-align: center; font-size: 14px; cursor: pointer; color: #4fc1ff;
+}
