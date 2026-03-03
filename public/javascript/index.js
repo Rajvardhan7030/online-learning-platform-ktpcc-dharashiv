@@ -33,7 +33,7 @@
             try {
                 const userData = JSON.parse(userDataString);
                 if (userData.username) {
-                    document.getElementById('display-name').textContent = userData.name;
+                    document.getElementById('display-name').textContent = userData.username;
                 }
                 if (userData.email) {
                     document.getElementById('display-email').textContent = userData.email;

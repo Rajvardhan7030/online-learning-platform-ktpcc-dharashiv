@@ -1,31 +1,35 @@
-// backend/middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 const User = require('../model/user.js');
 
 const protect = async (req, res, next) => {
     let token;
 
-    // Check if the authorization header exists and starts with 'Bearer'
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            // Extract the token from "Bearer <token>"
             token = req.headers.authorization.split(' ')[1];
+            
+            if (!token) {
+                return res.status(401).json({ message: 'Not authorized, token is empty' });
+            }
 
-            // Verify the token using our secret key
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            
+            if (!decoded.id) {
+                return res.status(401).json({ message: 'Not authorized, invalid token payload' });
+            }
+              req.user = await User.findById(decoded.id).select('-password');
+            
+            if (!req.user) {
+                return res.status(401).json({ message: 'Not authorized, user not found' });
+            }
 
-            // Find the user by ID and attach it to the request object (excluding the password)
-            req.user = await User.findById(decoded.id).select('-password');
-
-            // Move to the next middleware or controller
             next();
         } catch (error) {
-            res.status(401).json({ message: 'Not authorized, token failed' });
+            console.error('Auth middleware error:', error.message);
+            return res.status(401).json({ message: 'Not authorized, token failed' });
         }
-    }
-
-    if (!token) {
-        res.status(401).json({ message: 'Not authorized, no token' });
+    } else {
+        return res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
 

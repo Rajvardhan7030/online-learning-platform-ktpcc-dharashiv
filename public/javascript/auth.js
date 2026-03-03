@@ -1,8 +1,7 @@
 // ==========================================
         // Form Submission & API Connection Logic
         // ==========================================
-        const BACKEND_URL = 'http://localhost:5000'; // Change 5000 if your Node server uses a different port
-
+        const BACKEND_URL = API_BASE_URL;
    // 1. Handle Registration (Flip to Login on Success)
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault(); 
