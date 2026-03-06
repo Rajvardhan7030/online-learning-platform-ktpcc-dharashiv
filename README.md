@@ -49,25 +49,18 @@ Containerizing the environment ensures it runs flawlessly regardless of your ope
    git clone [https://github.com/yourusername/online-learning-platform.git](https://github.com/yourusername/online-learning-platform.git)
    cd online-learning-platform
 
-3. **Start the Main Ecosystem (Site, Backend, Database):**
+2. **Set up Environment Variables:**
+Create a .env file inside the backend/ directory and add your MongoDB credentials and JWT Secret.
+
+3. **Launch the Entire Ecosystem:**
 ```bash
-docker compose up --build -d
-```
-
-
-3. **Start the React IDE (Separate Process):**
-Open a new terminal window:
-```bash
-cd react-ide # (or your specific IDE folder name)
-npm install
-npm start
-
-```
-
-
-4. **Access the application:** Open Firefox (or your preferred browser) and navigate to `http://localhost:5500`.
+ docker-compose up --build -d
+ ```
+4. **Access the application:**
+Open your preferred browser and navigate to http://localhost:5500. The React IDE will automatically be available at http://localhost:3000.
 
 ---
+
 
 ### Method 2: Linux Setup (Manual)
 

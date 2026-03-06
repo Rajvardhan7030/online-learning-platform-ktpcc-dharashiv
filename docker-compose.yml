@@ -1,5 +1,5 @@
 services:
-# this is mongodb service configuration for docker-compose.yml file
+  # MongoDB Database
   mongodb:
     image: mongo:latest
     container_name: elearn_database
@@ -7,7 +7,8 @@ services:
       - "27018:27017"
     volumes:
       - mongo_data:/data/db
-# backend service
+
+  # Node.js Backend
   backend:
     build: ./backend
     container_name: elearn_backend
@@ -19,11 +20,21 @@ services:
       - mongodb
     restart: on-failure
 
+  # Main Landing Page / Platform Frontend
   frontend:
     build: .
     container_name: elearn_frontend
     ports:
       - "5500:80"
+    depends_on:
+      - backend
+
+  # React Code Compiler IDE
+  ide_frontend:
+    build: ./ide-frontend
+    container_name: elearn_ide
+    ports:
+      - "3000:80"
     depends_on:
       - backend
 
