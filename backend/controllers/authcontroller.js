@@ -73,3 +73,77 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+// this setting controller logic
+
+// @desc    Update username
+// @route   PUT /api/auth/update-username
+// @access  Private (Requires Token)
+exports.updateUsername = async (req, res) => {
+    try {
+        // req.user is set by our 'protect' middleware
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        user.username = req.body.username;
+        await user.save();
+
+        res.json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            token: generateToken(user._id),
+        });
+    } catch (error) {
+        // If the username already exists in the database, MongoDB throws code 11000
+        if (error.code === 11000) {
+             return res.status(400).json({ message: 'This username is already taken' });
+        }
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// @desc    Update password
+// @route   PUT /api/auth/update-password
+// @access  Private
+exports.updatePassword = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        // Verify the current password matches what is in the database
+        const isMatch = await user.matchPassword(req.body.currentPassword);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Incorrect current password' });
+        }
+
+        // Mongoose pre-save hook in user.js will automatically hash this new password!
+        user.password = req.body.newPassword;
+        await user.save(); 
+
+        res.json({ message: 'Password updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// @desc    Delete account
+// @route   DELETE /api/auth/delete-account
+// @access  Private
+exports.deleteAccount = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        // Force them to verify their password before permanent deletion
+        const isMatch = await user.matchPassword(req.body.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Incorrect password. Deletion cancelled.' });
+        }
+
+        await User.findByIdAndDelete(req.user.id);
+        res.json({ message: 'Account permanently deleted' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};

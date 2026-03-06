@@ -1,10 +1,23 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { registerUser, loginUser } = require('../controllers/authcontroller.js');
+
+// Import all our controller functions
+const { 
+    registerUser, 
+    loginUser, 
+    updateUsername, 
+    updatePassword, 
+    deleteAccount 
+} = require('../controllers/authcontroller.js');
+
+// Import the middleware to protect our settings routes
+const { protect } = require('../middleware/authmiddleware.js');
 
 const router = express.Router();
 
-// Validation rules
+// ==========================================
+// Public Routes (No Token Needed)
+// ==========================================
 const registerValidation = [
     body('username')
         .trim()
@@ -30,7 +43,15 @@ const loginValidation = [
         .notEmpty()
         .withMessage('Password is required')
 ];
+
 router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation, loginUser);
+
+// ==========================================
+// Private Routes (Requires JWT Token)
+// ==========================================
+router.put('/update-username', protect, updateUsername);
+router.put('/update-password', protect, updatePassword);
+router.delete('/delete-account', protect, deleteAccount);
 
 module.exports = router;
