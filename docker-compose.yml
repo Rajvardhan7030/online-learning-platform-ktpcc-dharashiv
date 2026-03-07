@@ -1,42 +1,60 @@
+version: '3.8'
+
 services:
-  # MongoDB Database
-  mongodb:
+  # 1. Database: MongoDB
+  mongo:
     image: mongo:latest
-    container_name: elearn_database
+    container_name: mongodb_elearn
     ports:
-      - "27018:27017"
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - elearn-network
+    restart: always
 
-  # Node.js Backend
+  # 2. Backend API
   backend:
     build: ./backend
-    container_name: elearn_backend
+    container_name: backend_elearn
     ports:
       - "5000:5000"
-    env_file:
-      - ./backend/.env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/elearning-ide
+      - JWT_SECRET=your_jwt_secret_key_here
+      - FRONTEND_URL=http://localhost:5500
+      - IDE_URL=http://localhost:3000
     depends_on:
-      - mongodb
+      - mongo
+    networks:
+      - elearn-network
     restart: on-failure
 
-  # Main Landing Page / Platform Frontend
-  frontend:
-    build: .
-    container_name: elearn_frontend
-    ports:
-      - "5500:80"
-    depends_on:
-      - backend
-
-  # React Code Compiler IDE
-  ide_frontend:
+  # 3. React IDE Micro-Frontend
+  ide:
     build: ./ide-frontend
-    container_name: elearn_ide
+    container_name: ide_elearn
     ports:
-      - "3000:80"
-    depends_on:
-      - backend
+      - "3000:3000"
+    networks:
+      - elearn-network
+    restart: always
+
+  # 4. Main Static Frontend
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.static-frontend
+    container_name: main_frontend_elearn
+    ports:
+      - "5500:5500"
+    networks:
+      - elearn-network
+    restart: always
+
+networks:
+  elearn-network:
+    driver: bridge
 
 volumes:
   mongo_data:

@@ -5,9 +5,17 @@ import CodeEditor from './components/CodeEditor';
 import AuthModal from './components/AuthModal';
 import './App.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function App() {
     const [language, setLanguage] = useState('html');
-    const [code, setCode] = useState('<h1>Hello World</h1>\n<p>This runs in your browser!</p>\n<style>\n  h1 { color: #61dafb; }\n  body { font-family: sans-serif; }\n</style>');
+    const [codes, setCodes] = useState({
+        html: '<h1>Hello World</h1>\n<p>This runs in your browser!</p>\n<style>\n  h1 { color: #61dafb; }\n  body { font-family: sans-serif; }\n</style>',
+        javascript: '// JavaScript (Node.js mode)\nconsole.log("Hello from Node!");',
+        python: 'print("Hello from Python!")',
+        java: 'public class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello from Java!");\n  }\n}',
+        c: '#include <stdio.h>\n\nint main() {\n  printf("Hello from C!\\n");\n  return 0;\n}'
+    });
     const [output, setOutput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     
@@ -16,37 +24,28 @@ function App() {
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [saveStatus, setSaveStatus] = useState('');
 
- // Check if user is already logged in on page load
-    useEffect(() => {
-        // 1. Check if login data was passed through the URL (The Auth Bridge)
-        const urlParams = new URLSearchParams(window.location.search);
-        const authData = urlParams.get('auth');
+    const setCode = (newCode) => {
+        setCodes(prev => ({ ...prev, [language]: newCode }));
+    };
+    const code = codes[language];
 
-        if (authData) {
+    // 1. SOLVES THE WARNING: Use useEffect to automatically restore the user's session on page load
+    useEffect(() => {
+        const storedUser = localStorage.getItem('ide_user');
+        if (storedUser) {
             try {
-                // Decode the data, save it to React's local storage, and log the user in
-                const parsedData = JSON.parse(decodeURIComponent(authData));
-                localStorage.setItem('ide_user', JSON.stringify(parsedData));
-                setUser(parsedData);
-                
-                // Clean up the URL so the token isn't visible in the address bar
-                window.history.replaceState({}, document.title, window.location.pathname);
+                setUser(JSON.parse(storedUser));
             } catch (error) {
-                console.error("Error parsing auth data from URL", error);
-            }
-        } else {
-            // 2. If no URL data, check React's local storage normally
-            const loggedInUser = localStorage.getItem('ide_user');
-            if (loggedInUser) {
-                setUser(JSON.parse(loggedInUser));
+                console.error("Failed to parse user session.");
             }
         }
     }, []);
 
+    // 2. SOLVES THE ERROR: Define the missing handleLogout function
     const handleLogout = () => {
-        localStorage.removeItem('ide_user');
-        setUser(null);
-        setOutput('');
+        setUser(null); // Clear React state
+        localStorage.removeItem('ide_user'); // Clear browser storage
+        setOutput(''); // Optional: clear output screen on logout
     };
 
     const handleRunCode = async () => {
@@ -56,25 +55,28 @@ function App() {
             setIsLoading(false);
             return;
         }
-        setTimeout(() => {
-            setOutput(`[System Message]: Server-side execution is currently disabled on this machine to save resources.\n\nTo run ${language}, please deploy the backend to a cloud server with Docker support.`);
+        
+        try {
+            const response = await axios.post(`${API_URL}/api/code/execute`, { language, code });
+            setOutput(response.data.output);
+        } catch (error) {
+            setOutput(error.response?.data?.output || "Error executing code");
+        } finally {
             setIsLoading(false);
-        }, 500); 
+        }
     };
 
-    // NEW: Function to save code to MongoDB
     const handleSaveCode = async () => {
         if (!user || !user.token) return;
         setSaveStatus('Saving...');
 
         try {
-            // Send the code along with the JWT in the Authorization header
-            await axios.post('http://localhost:5000/api/code/save', 
+            await axios.post(`${API_URL}/api/code/save`, 
                 { title: `My ${language} Snippet`, language, code },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
             setSaveStatus('Saved successfully!');
-            setTimeout(() => setSaveStatus(''), 3000); // Clear message after 3s
+            setTimeout(() => setSaveStatus(''), 3000);
         } catch (error) {
             console.error("Save error:", error);
             setSaveStatus('Error saving code');
@@ -82,16 +84,11 @@ function App() {
     };
 
     const handleLanguageChange = (e) => {
-        const newLang = e.target.value;
-        setLanguage(newLang);
-        if (newLang === 'html') setCode('<h1>Hello World</h1>\n<p>This runs in your browser!</p>\n<style>\n  h1 { color: #61dafb; }\n  body { font-family: sans-serif; }\n</style>');
-        else if (newLang === 'python') setCode('print("Hello from Python!")');
-        else if (newLang === 'java') setCode('public class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello from Java!");\n  }\n}');
-        else if (newLang === 'c') setCode('#include <stdio.h>\n\nint main() {\n  printf("Hello from C!\\n");\n  return 0;\n}');
-        else setCode('// JavaScript (Node.js mode)');
+        setLanguage(e.target.value);
         setOutput('');
     };
 
+    // The return() block stays exactly the same as your original code
     return (
         <div className="ide-container">
             <header className="header">
@@ -150,7 +147,11 @@ function App() {
             {showAuthModal && (
                 <AuthModal 
                     onClose={() => setShowAuthModal(false)} 
-                    onLoginSuccess={(userData) => setUser(userData)} 
+                    // Make sure the modal also saves the user to localStorage when they log in!
+                    onLoginSuccess={(userData) => {
+                        setUser(userData);
+                        localStorage.setItem('ide_user', JSON.stringify(userData));
+                    }} 
                 />
             )}
         </div>

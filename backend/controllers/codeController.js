@@ -12,8 +12,9 @@ exports.executeCode = async (req, res) => {
     }
 
     try {
-        // We use the native fetch API (available in Node 18+) to call Piston
-        // Piston v2 requires language, a version (we use "*" for the latest available), and the files.
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
         const response = await fetch('https://emkc.org/api/v2/piston/execute', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -21,10 +22,24 @@ exports.executeCode = async (req, res) => {
                 language: language,
                 version: "*", 
                 files: [{ content: code }]
-            })
+            }),
+            signal: controller.signal
         });
 
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Piston API Error: ${response.status} - ${errorText}`);
+            return res.status(response.status).json({ message: 'Execution server returned an error' });
+        }
+
         const data = await response.json();
+        
+        // Handle case where Piston might return unexpected body
+        if (!data || !data.run) {
+             return res.status(500).json({ message: 'Invalid response from execution server' });
+        }
 
         // Check if Piston returned a compilation/execution error
         if (data.compile && data.compile.code !== 0) {
