@@ -50,12 +50,17 @@ Containerizing the environment ensures it runs flawlessly regardless of your ope
    cd online-learning-platform
 
 2. **Set up Environment Variables:**
-Create a .env file inside the backend/ directory and add your MongoDB credentials and JWT Secret.
+Create a `.env` file in the root directory (for Docker Compose) and add your custom configuration (e.g., `JWT_SECRET`, `REACT_APP_API_URL`).
+Example `.env`:
+```env
+JWT_SECRET=your_secure_random_key_here
+REACT_APP_API_URL=http://localhost:5000
+```
 
 3. **Launch the Entire Ecosystem:**
 ```bash
- docker-compose up --build -d
- ```
+docker-compose up --build -d
+```
 4. **Access the application:**
 Open your preferred browser and navigate to http://localhost:5500. The React IDE will automatically be available at http://localhost:3000.
 
@@ -82,7 +87,7 @@ node server.js
 3. **Setup the React IDE:**
 Open a new terminal:
 ```bash
-cd react-ide
+cd ide-frontend
 npm install
 npm start
 
@@ -110,7 +115,7 @@ npm install node server.js
 3. **Setup the React IDE:**
 Open a new Command Prompt:
 ```cmd
-cd react-ide
+cd ide-frontend
 npm install
 npm start
 

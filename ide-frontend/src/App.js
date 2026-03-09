@@ -5,7 +5,7 @@ import CodeEditor from './components/CodeEditor';
 import AuthModal from './components/AuthModal';
 import './App.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+import API_URL from './config';
 
 function App() {
     const [language, setLanguage] = useState('html');

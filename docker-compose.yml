@@ -21,7 +21,7 @@ services:
       - "5000:5000"
     environment:
       - MONGO_URI=mongodb://mongo:27017/elearning-ide
-      - JWT_SECRET=your_jwt_secret_key_here
+      - JWT_SECRET=${JWT_SECRET:-mySuperSecretKey123}
       - FRONTEND_URL=http://localhost:5500
       - IDE_URL=http://localhost:3000
     depends_on:
@@ -32,7 +32,10 @@ services:
 
   # 3. React IDE Micro-Frontend
   ide:
-    build: ./ide-frontend
+    build: 
+      context: ./ide-frontend
+      args:
+        - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:5000}
     container_name: ide_elearn
     ports:
       - "3000:3000"

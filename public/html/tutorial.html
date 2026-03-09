@@ -6,14 +6,14 @@
     <title>E-Learn Tutorials</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="/public/css/home.css">
+    <link rel="stylesheet" href="../css/home.css">
     
-    <link rel="stylesheet" href="/public/css/tutorial.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
 
 </head>
 <body>
     <div class="navbar"> 
-        <img id="logo-img" src="/image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+        <img id="logo-img" src="../../image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
         <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
         
         
@@ -22,7 +22,7 @@
         <div class="nav-auth-section" style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
             <!-- button for sign in and sign up -->
             <div id="auth-buttons">
-                <a href="/public/html/auth.html" class="btn login-btn" >Sign In</a>
+                <a href="auth.html" class="btn login-btn" >Sign In</a>
             </div>
 
             <div id="profile-menu" class="nav-profile" style="display: none;">
@@ -36,8 +36,8 @@
                         <span id="display-email">student@university.edu</span>
                     </div>
                     <hr>
-                    <a href="/public/html/dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
-                    <a href="/public/html/settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
                     <hr>
                     <a href="#" onclick="logout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
@@ -121,8 +121,8 @@
     <!-- =================================================
                 script
     =================================================  -->
-    <script src="/public/javascript/index.js"></script>
-    
-    <script src="/public/javascript/tutorial.js"></script>
-</body>
+    <script src="../javascript/config.js"></script>
+    <script src="../javascript/index.js"></script>
+
+    <script src="../javascript/tutorial.js"></script></body>
 </html>

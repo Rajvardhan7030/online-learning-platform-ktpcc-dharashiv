@@ -80,6 +80,11 @@ exports.loginUser = async (req, res) => {
 // @route   PUT /api/auth/update-username
 // @access  Private (Requires Token)
 exports.updateUsername = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         // req.user is set by our 'protect' middleware
         const user = await User.findById(req.user.id);
@@ -107,6 +112,11 @@ exports.updateUsername = async (req, res) => {
 // @route   PUT /api/auth/update-password
 // @access  Private
 exports.updatePassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -131,6 +141,11 @@ exports.updatePassword = async (req, res) => {
 // @route   DELETE /api/auth/delete-account
 // @access  Private
 exports.deleteAccount = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ message: 'User not found' });

@@ -69,7 +69,10 @@ function renderActionPanel(topicObj, langCode) {
 
     // Fix absolute paths to be relative to root
     if (podcastLink && !podcastLink.startsWith('http') && !podcastLink.startsWith('/')) {
-        podcastLink = '/' + podcastLink;
+        // Since we are in public/html/tutorial.html, 
+        // and podcastLink is "public/audio/...",
+        // we need to go up two levels to reach root, then follow the path.
+        podcastLink = '../../' + podcastLink;
     }
 
     const safeDocText = encodeURIComponent(docContent || "<p>Content coming soon...</p>");

@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userDataString) {
         // ONLY redirect if they are on the welcome page. Let them browse tutorials freely!
         if (isWelcomePage) {
-            window.location.href = '/public/html/dashboard.html';
+            window.location.href = 'public/html/dashboard.html';
             return; // Stop execution so it redirects cleanly
         }
         
@@ -68,8 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
             // Delete the authentication token from memory
             localStorage.removeItem('ide_user');
             
-            // Redirect them back to the main homepage (adjust the path if needed)
-            window.location.href = '/index.html'; 
+            // Redirect them back to the main homepage
+            // If we are in public/html/, we need to go up two levels
+            const isSubfolder = window.location.pathname.includes('/public/html/');
+            window.location.href = isSubfolder ? '../../index.html' : 'index.html'; 
         }
     }
     // ==========================================
@@ -77,16 +79,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==========================================
     function openIDE(event) {
         event.preventDefault(); 
-        
+
+        // Use the base URL from config.js
+        const ideUrl = typeof IDE_BASE_URL !== 'undefined' ? IDE_BASE_URL : 'http://127.0.0.1:3000';
+
         // Grab the MongoDB user token we saved during login/signup
         const userData = localStorage.getItem('ide_user');
-        
+
         if (userData) {
             // If logged in, encode the data and send it to the React port
             const encodedData = encodeURIComponent(userData);
-            window.open(`http://localhost:3000/?auth=${encodedData}`, '_blank');
+            window.open(`${ideUrl}/?auth=${encodedData}`, '_blank');
         } else {
             // If logged out, just open the IDE normally
-            window.open('http://localhost:3000', '_blank');
+            window.open(ideUrl, '_blank');
         }
     }
