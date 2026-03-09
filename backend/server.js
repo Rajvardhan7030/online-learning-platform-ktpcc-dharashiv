@@ -24,19 +24,22 @@ const allowedOrigins = [
     process.env.FRONTEND_URL || 'http://localhost:5500',
     process.env.IDE_URL || 'http://localhost:3000',
     'http://127.0.0.1:5500',
-    'http://127.0.0.1:3000',
-    'https://code-learn-main-dd3i71h7l-rajvardhanjadhav2005-8020s-projects.vercel.app'
+    'http://127.0.0.1:3000'
 ];
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or curl requests)
+        // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
+        
+        // Check if the origin is in our strict list OR if it is a Vercel deployment
+        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('vercel.app')) {
+            return callback(null, true);
+        } else {
+            console.error(`CORS Blocked: The origin ${origin} is not allowed.`);
             const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
             return callback(new Error(msg), false);
         }
-        return callback(null, true);
     },
     credentials: true
 };
