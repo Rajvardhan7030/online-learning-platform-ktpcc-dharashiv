@@ -13,9 +13,30 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
+// Startup Validation
+if (!process.env.JWT_SECRET) {
+    console.error('❌ FATAL ERROR: JWT_SECRET is not defined in environment variables.');
+    process.exit(1);
+}
+
 // CORS configuration
+const allowedOrigins = [
+    process.env.FRONTEND_URL || 'http://localhost:5500',
+    process.env.IDE_URL || 'http://localhost:3000',
+    'http://127.0.0.1:5500',
+    'http://127.0.0.1:3000'
+];
+
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5500',
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
     credentials: true
 };
 app.use(cors(corsOptions));

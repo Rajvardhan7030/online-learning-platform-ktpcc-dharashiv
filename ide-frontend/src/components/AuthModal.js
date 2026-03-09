@@ -1,21 +1,28 @@
 // src/components/AuthModal.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 const AuthModal = ({ onClose, onLoginSuccess }) => {
     const [isLogin, setIsLogin] = useState(true);
-    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+    const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
     const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Password Matching Validation
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match!');
+            return;
+        }
         
         // Determine the correct backend endpoint based on Login vs Register
         const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
 
         try {
-            const response = await axios.post(`http://localhost:5000${endpoint}`, formData);
+            const response = await axios.post(`${API_URL}${endpoint}`, formData);
             
             // On success, save user data (including the JWT) to local storage
             localStorage.setItem('ide_user', JSON.stringify(response.data));
@@ -53,6 +60,11 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
                         type="password" placeholder="Password" required
                         value={formData.password}
                         onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    />
+                    <input 
+                        type="password" placeholder="Confirm Password" required
+                        value={formData.confirmPassword}
+                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                     />
                     <button type="submit">{isLogin ? 'Log In' : 'Sign Up'}</button>
                 </form>
