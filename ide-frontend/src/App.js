@@ -29,14 +29,30 @@ function App() {
     };
     const code = codes[language];
 
-    // 1. SOLVES THE WARNING: Use useEffect to automatically restore the user's session on page load
+    // 1. Restore user session on page load (Local Storage or URL Auth Bridge)
     useEffect(() => {
-        const storedUser = localStorage.getItem('ide_user');
-        if (storedUser) {
+        // Check URL parameters for "auth" bridge (from static site)
+        const urlParams = new URLSearchParams(window.location.search);
+        const authParam = urlParams.get('auth');
+        
+        if (authParam) {
             try {
-                setUser(JSON.parse(storedUser));
+                const decodedUser = JSON.parse(decodeURIComponent(authParam));
+                setUser(decodedUser);
+                localStorage.setItem('ide_user', JSON.stringify(decodedUser));
+                // Clean up the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
             } catch (error) {
-                console.error("Failed to parse user session.");
+                console.error("Failed to parse auth parameter:", error);
+            }
+        } else {
+            const storedUser = localStorage.getItem('ide_user');
+            if (storedUser) {
+                try {
+                    setUser(JSON.parse(storedUser));
+                } catch (error) {
+                    console.error("Failed to parse user session.");
+                }
             }
         }
     }, []);
@@ -135,7 +151,7 @@ function App() {
                         {language === 'html' ? (
                             <iframe srcDoc={output} title="output" sandbox="allow-scripts" style={{ width: '100%', height: '100%', border: 'none', backgroundColor: '#fff' }} />
                         ) : (
-                            <pre style={{ margin: 0, color: language === 'html' ? 'black' : '#ddd' }}>
+                            <pre style={{ margin: 0, color: '#ddd' }}>
                                 {output || "Click 'Run Code' to see the output here."}
                             </pre>
                         )}
@@ -147,11 +163,7 @@ function App() {
             {showAuthModal && (
                 <AuthModal 
                     onClose={() => setShowAuthModal(false)} 
-                    // Make sure the modal also saves the user to localStorage when they log in!
-                    onLoginSuccess={(userData) => {
-                        setUser(userData);
-                        localStorage.setItem('ide_user', JSON.stringify(userData));
-                    }} 
+                    onLoginSuccess={(userData) => setUser(userData)} 
                 />
             )}
         </div>

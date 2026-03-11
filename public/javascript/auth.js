@@ -51,12 +51,6 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
-    // Password Matching Validation
-    if (data.password !== data.confirmPassword) {
-        alert('Login failed: Passwords do not match!');
-        return;
-    }
-
     try {
         const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
             method: 'POST',

@@ -12,17 +12,22 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
         e.preventDefault();
         setError('');
 
-        // Password Matching Validation
-        if (formData.password !== formData.confirmPassword) {
+        // Password Matching Validation (Only for Registration)
+        if (!isLogin && formData.password !== formData.confirmPassword) {
             setError('Passwords do not match!');
             return;
         }
         
         // Determine the correct backend endpoint based on Login vs Register
         const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+        
+        // Prepare data to send (Only send required fields)
+        const requestData = isLogin 
+            ? { email: formData.email, password: formData.password }
+            : { username: formData.username, email: formData.email, password: formData.password };
 
         try {
-            const response = await axios.post(`${API_URL}${endpoint}`, formData);
+            const response = await axios.post(`${API_URL}${endpoint}`, requestData);
             
             // On success, save user data (including the JWT) to local storage
             localStorage.setItem('ide_user', JSON.stringify(response.data));
@@ -61,15 +66,17 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
                         value={formData.password}
                         onChange={(e) => setFormData({...formData, password: e.target.value})}
                     />
-                    <input 
-                        type="password" placeholder="Confirm Password" required
-                        value={formData.confirmPassword}
-                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                    />
+                    {!isLogin && (
+                        <input 
+                            type="password" placeholder="Confirm Password" required
+                            value={formData.confirmPassword}
+                            onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                        />
+                    )}
                     <button type="submit">{isLogin ? 'Log In' : 'Sign Up'}</button>
                 </form>
 
-                <div className="toggle-text" onClick={() => setIsLogin(!isLogin)}>
+                <div className="toggle-text" onClick={() => { setIsLogin(!isLogin); setError(''); }}>
                     {isLogin ? "Need an account? Register" : "Already have an account? Log in"}
                 </div>
                 <div className="toggle-text" style={{ color: '#aaa', marginTop: '10px' }} onClick={onClose}>
