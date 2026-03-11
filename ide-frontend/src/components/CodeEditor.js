@@ -12,7 +12,7 @@ const CodeEditor = ({ language, code, setCode }) => {
         <div className="editor-section">
             <Editor
                 height="100%"
-                theme="vs-dark" // Professional dark theme
+                theme="light" // Matches the overall site light theme
                 language={language}
                 value={code}
                 onChange={handleEditorChange}

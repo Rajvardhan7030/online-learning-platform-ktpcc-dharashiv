@@ -208,73 +208,86 @@
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Robot Antenna */
+/* Sleek Floating Robot Redesign */
 .robot-antenna {
-    width: 6px;
-    height: 30px;
-    background-color: #ccc;
+    width: 4px;
+    height: 25px;
+    background: linear-gradient(to top, #ccc, #fff);
     position: relative;
+    border-radius: 4px;
 }
 .robot-antenna::before {
     content: '';
     position: absolute;
-    top: -10px;
-    left: -5px;
-    width: 16px;
-    height: 16px;
-    background-color: #ff4d4d;
+    top: -12px;
+    left: -4px;
+    width: 12px;
+    height: 12px;
+    background-color: #00d2ff;
     border-radius: 50%;
-    box-shadow: 0 0 10px #ff4d4d;
-    animation: blink 2s infinite;
+    box-shadow: 0 0 15px #00d2ff, 0 0 5px #0067f6;
+    animation: blink 1.5s infinite alternate;
 }
 
 /* Robot Head */
 .robot-head {
-    width: 140px;
-    height: 110px;
-    background: linear-gradient(135deg, #0067f6, #004bb5);
-    border-radius: 25px;
-    box-shadow: 0 15px 25px rgba(0, 103, 246, 0.3);
+    width: 130px;
+    height: 130px;
+    background: linear-gradient(135deg, #ffffff, #e0eafc);
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(0, 103, 246, 0.2), inset -5px -5px 15px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     z-index: 2;
+    border: 4px solid #0067f6;
 }
 
-/* Robot Eyes */
+/* Robot Eyes (Screen) */
 .robot-eyes {
     display: flex;
-    gap: 25px;
-    margin-bottom: 15px;
+    gap: 15px;
+    margin-bottom: 10px;
+    background: #111;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
 }
 
 .eye {
-    width: 28px;
-    height: 28px;
-    background-color: white;
-    border-radius: 50%;
+    width: 20px;
+    height: 25px;
+    background-color: #00d2ff;
+    border-radius: 10px;
     transition: all 0.2s ease;
-    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 0 8px #00d2ff;
 }
 
 /* Robot Mouth */
 .robot-mouth {
-    width: 40px;
-    height: 8px;
-    background-color: white;
+    width: 30px;
+    height: 4px;
+    background-color: #0067f6;
     border-radius: 10px;
     transition: all 0.3s ease;
 }
 
-/* Robot Body (Neck) */
+/* Robot Body (Hover Ring) */
 .robot-body-part {
-    width: 40px;
-    height: 30px;
-    background-color: #ddd;
-    border-radius: 0 0 15px 15px;
-    box-shadow: inset 0 10px 10px rgba(0,0,0,0.1);
+    width: 80px;
+    height: 15px;
+    background: radial-gradient(ellipse at center, #0067f6 0%, transparent 70%);
+    border-radius: 50%;
+    margin-top: 15px;
+    opacity: 0.6;
+    animation: hover 2s ease-in-out infinite;
+}
+
+@keyframes hover {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+    50% { transform: translateY(10px) scale(0.8); opacity: 0.3; }
 }
 
 /* --- ROBOT ANIMATION STATES --- */
@@ -283,25 +296,34 @@
 .robot.excited {
     transform: translateY(-30px) scale(1.05); /* Jumps up */
 }
+.robot.excited .robot-head {
+    border-color: #00d2ff;
+}
+.robot.excited .eye {
+    height: 35px; /* Big eyes */
+    border-radius: 50% 50% 10px 10px;
+}
 .robot.excited .robot-mouth {
-    height: 20px; /* Big smile */
-    border-radius: 0 0 20px 20px;
+    height: 15px; /* Big smile */
+    border-radius: 0 0 15px 15px;
+    background-color: #00d2ff;
 }
 
 /* State 2: Blindfolded (When Password is shown) */
 .robot.blindfold .eye {
     height: 4px; /* Squints/closes eyes */
     border-radius: 2px;
-    transform: translateY(12px);
-    background-color: #a3c7fc;
+    transform: translateY(10px);
+    background-color: #ff4d4d;
+    box-shadow: 0 0 8px #ff4d4d;
 }
 .robot.blindfold .robot-mouth {
-    width: 20px; /* Nervous tiny mouth */
+    width: 15px; /* Nervous tiny mouth */
 }
 
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.6; transform: scale(1.2); }
 }
 
 /* Mobile Responsiveness */
@@ -311,7 +333,21 @@
         gap: 20px;
     }
     .robot {
-        transform: scale(0.8);
+        transform: scale(0.85);
+        margin-top: 40px;
+    }
+}
+@media (max-width: 480px) {
+    .auth-wrapper {
+        width: 100%;
+        max-width: 360px;
+        height: 520px;
+    }
+    .front, .back {
+        padding: 30px 20px;
+    }
+    .auth-page-layout {
+        padding: 0 15px;
     }
 }
 /* Hide default browser password toggles */
