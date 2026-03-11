@@ -38,7 +38,7 @@ exports.registerUser = async (req, res) => {
             await user.save({ validateBeforeSave: false });
 
             // Create verification URL
-            const verifyUrl = `${process.env.FRONTEND_URL || 'http://localhost:5500'}/html/verify.html?token=${verificationToken}`;
+            const verifyUrl = `${process.env.FRONTEND_URL || 'http://localhost:5500'}/public/html/verify.html?token=${verificationToken}`;
 
             const message = `
                 <h1>You have requested to register an account.</h1>
@@ -230,11 +230,12 @@ exports.forgotPassword = async (req, res) => {
 
         await user.save({ validateBeforeSave: false });
 
-        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5500'}/html/reset-password.html?token=${resetToken}`;
+        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5500'}/public/html/reset-password.html?token=${resetToken}`;
 
         const message = `
             <h1>You have requested a password reset</h1>
-            <p>Please make a post request to: \n\n <a href="${resetUrl}" clicktracking=off>${resetUrl}</a></p>
+            <p>Please click the following link to reset your password. This link is valid for 15 minutes:</p>
+            <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
         `;
 
         try {

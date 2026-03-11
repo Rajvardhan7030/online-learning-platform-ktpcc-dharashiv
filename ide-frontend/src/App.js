@@ -31,12 +31,28 @@ function App() {
 
     // 1. SOLVES THE WARNING: Use useEffect to automatically restore the user's session on page load
     useEffect(() => {
-        const storedUser = localStorage.getItem('ide_user');
-        if (storedUser) {
+        // Check for ?auth= parameter first (Auth Bridge)
+        const urlParams = new URLSearchParams(window.location.search);
+        const authData = urlParams.get('auth');
+
+        if (authData) {
             try {
-                setUser(JSON.parse(storedUser));
+                const decodedData = JSON.parse(decodeURIComponent(authData));
+                setUser(decodedData);
+                localStorage.setItem('ide_user', JSON.stringify(decodedData));
+                // Clean up the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
             } catch (error) {
-                console.error("Failed to parse user session.");
+                console.error("Failed to parse auth data from URL.");
+            }
+        } else {
+            const storedUser = localStorage.getItem('ide_user');
+            if (storedUser) {
+                try {
+                    setUser(JSON.parse(storedUser));
+                } catch (error) {
+                    console.error("Failed to parse user session.");
+                }
             }
         }
     }, []);
