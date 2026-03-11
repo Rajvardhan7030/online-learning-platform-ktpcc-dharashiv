@@ -46,7 +46,7 @@ exports.registerUser = async (req, res) => {
                 <a href="${verifyUrl}" clicktracking=off>${verifyUrl}</a>
             `;
 
-            try {
+           try {
                 await sendEmail({
                     email: user.email,
                     subject: 'Email Verification',
@@ -57,10 +57,10 @@ exports.registerUser = async (req, res) => {
                     message: 'Registration successful! Please check your email to verify your account.'
                 });
             } catch (err) {
-                user.verificationToken = undefined;
-                await user.save({ validateBeforeSave: false });
+                // THE FIX: Delete the incomplete user record so they aren't permanently stuck 👇
+                await User.findByIdAndDelete(user._id);
 
-                res.status(500).json({ message: 'Email could not be sent', error: err.message });
+                res.status(500).json({ message: 'Email could not be sent. Please try registering again.', error: err.message });
             }
         } else {
             res.status(400).json({ message: 'Invalid user data' });
