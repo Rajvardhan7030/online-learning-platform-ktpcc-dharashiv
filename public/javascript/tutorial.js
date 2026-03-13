@@ -13,6 +13,8 @@ const topicsData = {
         },
         {
             titleEn: "2. Introduction to HTML",
+            youtubeUrlEn: "https://youtu.be/it1rTvBcfRg?si=8y7wJR4d6y1N8cPn",
+            docTextEn: "<h4> HTML </h4><p>HTML stands For Hyper Text Markup Language. It is used to create structure of web.</p>"
         },
         // ... (remaining topics should be updated similarly, I will simplify for this replacement)
     ]
