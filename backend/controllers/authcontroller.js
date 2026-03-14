@@ -190,22 +190,31 @@ exports.deleteAccount = async (req, res) => {
 };
 
 // @desc    Verify Email
-// @route   GET /api/auth/verify-email/:token
+// @route   POST /api/auth/verify-email
 exports.verifyEmail = async (req, res) => {
     try {
-        const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+        const { email, code } = req.body;
 
-        const user = await User.findOne({ verificationToken: hashedToken });
+        if (!email || !code) {
+            return res.status(400).json({ message: 'Email and verification code are required' });
+        }
+
+        const hashedToken = crypto.createHash('sha256').update(code).digest('hex');
+
+        const user = await User.findOne({ 
+            email,
+            verificationToken: hashedToken 
+        });
 
         if (!user) {
-            return res.status(400).json({ message: 'Invalid or expired token' });
+            return res.status(400).json({ message: 'Invalid or expired verification code' });
         }
 
         user.isVerified = true;
         user.verificationToken = undefined;
         await user.save({ validateBeforeSave: false });
 
-        res.status(200).json({ message: 'Email verified successfully' });
+        res.status(200).json({ message: 'Email verified successfully. You can now log in.' });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }

@@ -73,7 +73,7 @@ const deleteAccountValidation = [
 
 router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation, loginUser);
-router.get('/verify-email/:token', verifyEmail);
+router.post('/verify-email', verifyEmail);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
 

@@ -31,9 +31,16 @@
     </div>
 
     <div class="verification-container" id="status-container">
-        <i class="fas fa-spinner fa-spin success-icon" style="color: #6C63FF;" id="status-icon"></i>
-        <h1 id="status-title">Verifying Email...</h1>
-        <p id="status-message">Please wait while we verify your email address.</p>
+        <i class="fas fa-envelope-open-text success-icon" style="color: #6C63FF;" id="status-icon"></i>
+        <h1 id="status-title">Verify Your Email</h1>
+        <p id="status-message">Please enter the 6-digit verification code sent to your email.</p>
+        
+        <form id="verify-form" style="margin-bottom: 30px;">
+            <input type="text" id="verify-code" maxlength="6" placeholder="Enter 6-digit code" required 
+                style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 1.2em; text-align: center; letter-spacing: 5px; margin-bottom: 20px;">
+            <button type="submit" class="auth-btn" style="width: 100%; border: none;">Verify Code</button>
+        </form>
+
         <a href="auth.html" class="auth-btn" style="text-decoration: none; display: inline-block; width: auto; padding: 10px 30px; display: none;" id="login-btn">Go to Login</a>
     </div>
 
