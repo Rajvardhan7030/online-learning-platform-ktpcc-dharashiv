@@ -32,18 +32,15 @@ exports.registerUser = async (req, res) => {
         const user = await User.create({ username, email, password });
 
         if (user) {
-            // Generate verification token
-            const verificationToken = crypto.randomBytes(32).toString('hex');
-            user.verificationToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+            // Generate 6-digit verification code
+            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            user.verificationToken = crypto.createHash('sha256').update(verificationCode).digest('hex');
             await user.save({ validateBeforeSave: false });
 
-            // Create verification URL
-            const verifyUrl = `${process.env.FRONTEND_URL || 'http://localhost:5500'}/public/html/verify.html?token=${verificationToken}`;
-
             const message = `
-                <h1>You have requested to register an account.</h1>
-                <p>Please click on the following link to verify your email:</p>
-                <a href="${verifyUrl}" clicktracking=off>${verifyUrl}</a>
+                <h1>Welcome to E-Learn!</h1>
+                <p>Your verification code is: <strong>${verificationCode}</strong></p>
+                <p>Please enter this code on the verification page to complete your registration.</p>
             `;
 
            try {
