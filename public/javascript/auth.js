@@ -26,9 +26,9 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         const result = await response.json();
 
         if (response.ok) {
-            alert('Registration Successful! Please sign in with your new account.');
-            e.target.reset(); 
-            toggleFlip(); 
+            alert('Registration Successful! Please check your email for the verification code.');
+            // Redirect to verification page with email in query param
+            window.location.href = `/public/html/verify.html?email=${encodeURIComponent(data.email)}`;
         } else {
             // Display backend validation errors cleanly
             if (result.errors && result.errors.length > 0) {

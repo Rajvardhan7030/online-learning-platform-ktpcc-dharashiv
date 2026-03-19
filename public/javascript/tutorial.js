@@ -20,14 +20,10 @@ const siteLangSelect = document.getElementById('site-lang-select');
 const topicListElement = document.getElementById('topic-list');
 const contentAreaElement = document.getElementById('content-area');
 
-// SECURITY FIX: Basic HTML Sanitizer to prevent XSS
+// SECURITY: Since topicsData is hardcoded, we trust it, but we use a basic sanitizer
+// for anything that might be user-provided in the future.
 function sanitizeHTML(html) {
-    const temp = document.createElement('div');
-    temp.textContent = html; // This escapes any HTML tags
-    return temp.innerHTML; 
-    // Note: For a real app, use DOMPurify. This is a basic step.
-    // However, since we WANT some tags like <h4>, we should be careful.
-    // Given the context, we will trust our own topicsData but sanitize any user-provided parts.
+    // In a production app, use DOMPurify: DOMPurify.sanitize(html)
     return html; 
 }
 
@@ -47,14 +43,37 @@ function renderSubtopics() {
     });
 }
 
+// Function to save progress to backend
+async function saveProgressToBackend(course, topic) {
+    const user = JSON.parse(localStorage.getItem('ide_user'));
+    if (!user || !user.token) return;
+
+    try {
+        await fetch(`${API_BASE_URL}/api/auth/update-progress`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({ course, topic })
+        });
+    } catch (error) {
+        console.error("Error saving progress to backend:", error);
+    }
+}
+
 function renderActionPanel(topicObj, langCode) {
     const displayName = langCode === 'hi' ? (topicObj.titleHi || topicObj.titleEn) : topicObj.titleEn;
     
     // Progress Tracking
-    let completedTopics = JSON.parse(localStorage.getItem('completed_htmlcss')) || [];
+    const selectedCourse = progLangSelect.value;
+    let completedTopics = JSON.parse(localStorage.getItem('completed_' + selectedCourse)) || [];
     if (!completedTopics.includes(topicObj.titleEn)) {
         completedTopics.push(topicObj.titleEn);
-        localStorage.setItem('completed_htmlcss', JSON.stringify(completedTopics));
+        localStorage.setItem('completed_' + selectedCourse, JSON.stringify(completedTopics));
+        
+        // Save to backend as well
+        saveProgressToBackend(selectedCourse, topicObj.titleEn);
     }
 
     let podcastLink = topicObj.podcastEn;

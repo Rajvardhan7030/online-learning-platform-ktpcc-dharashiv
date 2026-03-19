@@ -69,9 +69,13 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem('ide_user');
             
             // Redirect them back to the main homepage
-            // If we are in public/html/, we need to go up two levels
-            const isSubfolder = window.location.pathname.includes('/public/html/');
-            window.location.href = isSubfolder ? '../../index.html' : 'index.html'; 
+            // We use the location of this script to determine how to get home
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/public/html/')) {
+                window.location.href = '../../index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
         }
     }
     // ==========================================

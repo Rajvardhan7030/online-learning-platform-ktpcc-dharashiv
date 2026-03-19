@@ -31,19 +31,19 @@ function App() {
 
     // 1. Restore user session on page load (Local Storage or URL Auth Bridge)
     useEffect(() => {
-        // Check URL parameters for "auth" bridge (from static site)
+        // Check for ?auth= parameter first (Auth Bridge)
         const urlParams = new URLSearchParams(window.location.search);
-        const authParam = urlParams.get('auth');
-        
-        if (authParam) {
+        const authData = urlParams.get('auth');
+
+        if (authData) {
             try {
-                const decodedUser = JSON.parse(decodeURIComponent(authParam));
-                setUser(decodedUser);
-                localStorage.setItem('ide_user', JSON.stringify(decodedUser));
+                const decodedData = JSON.parse(decodeURIComponent(authData));
+                setUser(decodedData);
+                localStorage.setItem('ide_user', JSON.stringify(decodedData));
                 // Clean up the URL
                 window.history.replaceState({}, document.title, window.location.pathname);
             } catch (error) {
-                console.error("Failed to parse auth parameter:", error);
+                console.error("Failed to parse auth data from URL.");
             }
         } else {
             const storedUser = localStorage.getItem('ide_user');

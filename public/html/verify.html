@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - E-Learn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <style>
+        .verification-container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 100px auto;
+        }
+        .verification-container h1 { color: #333; margin-bottom: 20px; }
+        .verification-container p { color: #666; margin-bottom: 30px; font-size: 1.1em; }
+        .success-icon { color: #4CAF50; font-size: 4em; margin-bottom: 20px; }
+        .error-icon { color: #f44336; font-size: 4em; margin-bottom: 20px; }
+    </style>
+</head>
+<body class="auth-body">
+    <div class="navbar" style="position: absolute; width: 100%; top: 0;"> 
+        <img id="logo-img" src="../../image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+        <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
+        <a href="../../index.html" style="margin-left: auto;" class="btn">Back to Home</a>
+    </div>
+
+    <div class="verification-container" id="status-container">
+        <i class="fas fa-envelope-open-text success-icon" style="color: #6C63FF;" id="status-icon"></i>
+        <h1 id="status-title">Verify Your Email</h1>
+        <p id="status-message">Please enter the 6-digit verification code sent to your email.</p>
+        
+        <form id="verify-form" style="margin-bottom: 30px;">
+            <input type="text" id="verify-code" maxlength="6" placeholder="Enter 6-digit code" required 
+                style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 1.2em; text-align: center; letter-spacing: 5px; margin-bottom: 20px;">
+            <button type="submit" class="auth-btn" style="width: 100%; border: none;">Verify Code</button>
+        </form>
+
+        <a href="auth.html" class="auth-btn" style="text-decoration: none; display: inline-block; width: auto; padding: 10px 30px; display: none;" id="login-btn">Go to Login</a>
+    </div>
+
+    <script src="../javascript/config.js"></script>
+    <script src="../javascript/verify.js"></script>
+</body>
+</html>
