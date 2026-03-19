@@ -7,8 +7,9 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/authroutes');
 const codeRoutes = require('./routes/coderoutes');
-
 const app = express();
+// trust proxy of free deploy
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());
@@ -123,3 +124,15 @@ process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err.message);
     process.exit(1);
 });
+
+// .env file should contain:
+// PORT=
+
+// MONGO_URI=
+
+// JWT_SECRET=
+// JWT_EXPIRE=
+// FRONTEND_URL=
+// NODE_ENV=
+// EMAIL_USERNAME=
+// EMAIL_PASSWORD=
