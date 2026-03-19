@@ -220,6 +220,53 @@ exports.verifyEmail = async (req, res) => {
     }
 };
 
+// @desc    Update user progress
+// @route   POST /api/auth/update-progress
+exports.updateProgress = async (req, res) => {
+    try {
+        const { course, topic } = req.body;
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (!user.progress[course]) {
+            user.progress[course] = [];
+        }
+
+        if (!user.progress[course].includes(topic)) {
+            user.progress[course].push(topic);
+            await user.save();
+        }
+
+        res.status(200).json({ 
+            message: 'Progress updated', 
+            progress: user.progress 
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// @desc    Get user progress
+// @route   GET /api/auth/progress
+exports.getProgress = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ 
+            progress: user.progress || { htmlcss: [], javascript: [], python: [] }
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 // @desc    Forgot Password
 // @route   POST /api/auth/forgot-password
 exports.forgotPassword = async (req, res) => {
@@ -230,28 +277,34 @@ exports.forgotPassword = async (req, res) => {
             return res.status(404).json({ message: 'There is no user with that email' });
         }
 
-        const resetToken = crypto.randomBytes(32).toString('hex');
-        user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        // Generate 6-digit code instead of a long token
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        user.resetPasswordToken = crypto.createHash('sha256').update(resetCode).digest('hex');
         user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
 
         await user.save({ validateBeforeSave: false });
 
-        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5500'}/public/html/reset-password.html?token=${resetToken}`;
-
         const message = `
-            <h1>You have requested a password reset</h1>
-            <p>Please click the following link to reset your password. This link is valid for 15 minutes:</p>
-            <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                <h2 style="color: #333; text-align: center;">Password Reset Request</h2>
+                <p>You have requested a password reset for your CodeLearn account.</p>
+                <div style="background: #f4f4f4; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; border-radius: 5px; margin: 20px 0;">
+                    ${resetCode}
+                </div>
+                <p>This code is valid for 15 minutes. If you did not request this, please ignore this email.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="font-size: 12px; color: #777; text-align: center;">© 2024 CodeLearn. All rights reserved.</p>
+            </div>
         `;
 
         try {
             await sendEmail({
                 email: user.email,
-                subject: 'Password Reset Token',
+                subject: 'Password Reset Code',
                 html: message
             });
 
-            res.status(200).json({ message: 'Email sent' });
+            res.status(200).json({ message: 'Reset code sent to your email' });
         } catch (err) {
             user.resetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;
@@ -265,10 +318,16 @@ exports.forgotPassword = async (req, res) => {
 };
 
 // @desc    Reset Password
-// @route   POST /api/auth/reset-password/:token
+// @route   POST /api/auth/reset-password
 exports.resetPassword = async (req, res) => {
     try {
-        const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+        const { code, password } = req.body;
+
+        if (!code) {
+            return res.status(400).json({ message: 'Please provide the reset code' });
+        }
+
+        const hashedToken = crypto.createHash('sha256').update(code).digest('hex');
 
         const user = await User.findOne({
             resetPasswordToken: hashedToken,
@@ -276,14 +335,14 @@ exports.resetPassword = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(400).json({ message: 'Invalid or expired token' });
+            return res.status(400).json({ message: 'Invalid or expired reset code' });
         }
 
-        if (!req.body.password || req.body.password.length < 6) {
+        if (!password || password.length < 6) {
              return res.status(400).json({ message: 'Password must be at least 6 characters long' });
         }
 
-        user.password = req.body.password;
+        user.password = password;
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
         

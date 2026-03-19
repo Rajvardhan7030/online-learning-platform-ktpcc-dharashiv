@@ -1,5 +1,6 @@
 document.getElementById('reset-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const code = document.getElementById('code').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const statusMessage = document.getElementById('status-message');
@@ -11,11 +12,8 @@ document.getElementById('reset-form').addEventListener('submit', async (e) => {
         return;
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-
-    if (!token) {
-        statusMessage.textContent = "Error: Invalid or missing token in URL.";
+    if (!code || code.length !== 6) {
+        statusMessage.textContent = "Please enter a valid 6-digit reset code.";
         statusMessage.className = 'message-box message-error';
         return;
     }
@@ -26,12 +24,12 @@ document.getElementById('reset-form').addEventListener('submit', async (e) => {
     statusMessage.textContent = '';
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/reset-password/${token}`, {
+        const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ code, password })
         });
 
         const data = await response.json();

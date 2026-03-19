@@ -26,7 +26,12 @@ const userSchema = new mongoose.Schema({
     },
     isVerified: {
         type: Boolean,
-        default: false,
+        default: false
+    },
+    progress: {
+        htmlcss: { type: [String], default: [] },
+        javascript: { type: [String], default: [] },
+        python: { type: [String], default: [] }
     },
     verificationToken: String,
     resetPasswordToken: String,

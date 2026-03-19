@@ -15,8 +15,7 @@ exports.executeCode = async (req, res) => {
 
     try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
-
+        const timeout = setTimeout(() => controller.abort(), 15000); // Increased to 15s for stability
 
         const response = await fetch('https://emkc.org/api/v2/piston/execute', {
             method: 'POST',

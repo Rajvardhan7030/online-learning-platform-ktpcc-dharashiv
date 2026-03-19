@@ -10,7 +10,9 @@ const {
     deleteAccount,
     verifyEmail,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    updateProgress,
+    getProgress
 } = require('../controllers/authcontroller.js');
 
 // Import the middleware to protect our settings routes
@@ -75,7 +77,7 @@ router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation, loginUser);
 router.post('/verify-email', verifyEmail);
 router.post('/forgot-password', forgotPassword);
-router.post('/reset-password/:token', resetPassword);
+router.post('/reset-password', resetPassword);
 
 // ==========================================
 // Private Routes (Requires JWT Token)
@@ -83,5 +85,7 @@ router.post('/reset-password/:token', resetPassword);
 router.put('/update-username', protect, updateUsernameValidation, updateUsername);
 router.put('/update-password', protect, updatePasswordValidation, updatePassword);
 router.delete('/delete-account', protect, deleteAccountValidation, deleteAccount);
+router.post('/update-progress', protect, updateProgress);
+router.get('/progress', protect, getProgress);
 
 module.exports = router;

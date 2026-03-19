@@ -21,9 +21,14 @@ document.getElementById('forgot-form').addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            statusMessage.textContent = data.message || "Password reset link sent to your email.";
+            statusMessage.textContent = "A 6-digit reset code has been sent to your email. Redirecting...";
             statusMessage.className = 'message-box message-success';
             document.getElementById('email').value = '';
+            
+            // Redirect to reset password page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'reset-password.html';
+            }, 2000);
         } else {
             statusMessage.textContent = data.message || "Failed to send reset link.";
             statusMessage.className = 'message-box message-error';
