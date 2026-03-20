@@ -8,8 +8,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/authroutes');
 const codeRoutes = require('./routes/coderoutes');
 const app = express();
-// trust proxy of free deploy
-app.set('trust proxy', 1);
+
 
 // Security middleware
 app.use(helmet());
@@ -45,14 +44,17 @@ const corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
-
+// trust proxy of free deploy
+app.set('trust proxy', 1);
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+  legacyHeaders: false,
     message: 'Too many requests from this IP, please try again later.'
 });
-app.use('/api/', limiter);
+app.use( limiter);
 
 // Stricter rate limiting for auth endpoints
 const authLimiter = rateLimit({
