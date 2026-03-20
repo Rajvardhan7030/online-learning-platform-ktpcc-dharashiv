@@ -3,16 +3,23 @@
 // ==========================================
 const BACKEND_URL = API_BASE_URL;
 
+/**
+ * Utility to display errors clearly to the user.
+ */
+const showError = (message) => {
+    alert('Error: ' + message);
+};
+
 // 1. Handle Registration
 document.getElementById('register-form').addEventListener('submit', async (e) => {
     e.preventDefault(); 
-    
+
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
     // Password Matching Validation
     if (data.password !== data.confirmPassword) {
-        alert('Registration failed: Passwords do not match!');
+        showError('Passwords do not match!');
         return;
     }
 
@@ -25,29 +32,23 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 
         const result = await response.json();
 
-        if (response.ok) {
-            alert('Registration Successful! Please check your email for the verification code.');
-            // Redirect to verification page with email in query param
+        if (response.ok && result.status === 'success') {
+            alert('Registration Successful! ' + result.message);
+            // Redirect to verification page
             window.location.href = `/public/html/verify.html?email=${encodeURIComponent(data.email)}`;
         } else {
-            // Display backend validation errors cleanly
-            if (result.errors && result.errors.length > 0) {
-                const errorMessages = result.errors.map(err => err.msg).join('\n');
-                alert('Registration failed:\n' + errorMessages);
-            } else {
-                alert('Registration failed: ' + (result.message || 'Unknown error'));
-            }
+            showError(result.message || 'Registration failed');
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Could not connect to the server.');
+        console.error('Registration Error:', error);
+        showError('Could not connect to the server. Please ensure the backend is running.');
     }
 });
 
 // 2. Handle Login
 document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault(); 
-    
+
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
@@ -60,20 +61,18 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
         const result = await response.json();
 
-        if (response.ok) {
-            localStorage.setItem('ide_user', JSON.stringify(result));
-            window.location.href = '/index.html';
+        if (response.ok && result.status === 'success') {
+            // Store user data excluding status
+            const { status, ...userData } = result;
+            localStorage.setItem('ide_user', JSON.stringify(userData));
+
+            // Redirect to dashboard or home
+            window.location.href = '../../index.html';
         } else {
-            // Display backend validation errors cleanly
-            if (result.errors && result.errors.length > 0) {
-                const errorMessages = result.errors.map(err => err.msg).join('\n');
-                alert('Login failed:\n' + errorMessages);
-            } else {
-                alert('Login failed: ' + (result.message || 'Invalid credentials'));
-            }
+            showError(result.message || 'Invalid credentials');
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Could not connect to the server. Is your Node backend running?');
+        console.error('Login Error:', error);
+        showError('Could not connect to the server.');
     }
 });

@@ -1,11 +1,11 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import CodeEditor from './components/CodeEditor';
 import AuthModal from './components/AuthModal';
 import './App.css';
 
-import API_URL from './config';
+import { API_URL, MAIN_FRONTEND_URL } from './config';
 
 function App() {
     const [language, setLanguage] = useState('html');
@@ -57,12 +57,15 @@ function App() {
         }
     }, []);
 
-    // 2. SOLVES THE ERROR: Define the missing handleLogout function
-    const handleLogout = () => {
-        setUser(null); // Clear React state
-        localStorage.removeItem('ide_user'); // Clear browser storage
-        setOutput(''); // Optional: clear output screen on logout
-    };
+    // Handle logout with dynamic URL from config
+    const handleLogout = useCallback(() => {
+        if (window.confirm("Are you sure you want to log out from the IDE?")) {
+            setUser(null); 
+            localStorage.removeItem('ide_user');
+            setOutput('');
+            window.location.href = MAIN_FRONTEND_URL;
+        }
+    }, []);
 
     const handleRunCode = async () => {
         setIsLoading(true);
@@ -74,28 +77,35 @@ function App() {
         
         try {
             const response = await axios.post(`${API_URL}/api/code/execute`, { language, code });
-            setOutput(response.data.output);
+            setOutput(response.data.output || "No output returned.");
         } catch (error) {
-            setOutput(error.response?.data?.output || "Error executing code");
+            setOutput(error.response?.data?.output || error.response?.data?.message || "Error executing code");
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleSaveCode = async () => {
-        if (!user || !user.token) return;
+        if (!user || !user.token) {
+            setShowAuthModal(true);
+            return;
+        }
+        
+        const snippetTitle = window.prompt("Enter a title for your snippet:", `My ${language} Snippet`);
+        if (!snippetTitle) return; // User cancelled
+
         setSaveStatus('Saving...');
 
         try {
             await axios.post(`${API_URL}/api/code/save`, 
-                { title: `My ${language} Snippet`, language, code },
+                { title: snippetTitle, language, code },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
             setSaveStatus('Saved successfully!');
             setTimeout(() => setSaveStatus(''), 3000);
         } catch (error) {
             console.error("Save error:", error);
-            setSaveStatus('Error saving code');
+            setSaveStatus(error.response?.data?.message || 'Error saving code');
         }
     };
 

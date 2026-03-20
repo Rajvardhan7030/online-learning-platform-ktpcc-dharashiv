@@ -29,11 +29,14 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
         try {
             const response = await axios.post(`${API_URL}${endpoint}`, requestData);
             
+            // Extract status and rest of the user data
+            const { status, ...userData } = response.data;
+            
             // On success, save user data (including the JWT) to local storage
-            localStorage.setItem('ide_user', JSON.stringify(response.data));
+            localStorage.setItem('ide_user', JSON.stringify(userData));
             
             // Notify the parent App component that login was successful
-            onLoginSuccess(response.data);
+            onLoginSuccess(userData);
             onClose(); // Close the modal
         } catch (err) {
             setError(err.response?.data?.message || 'An error occurred. Please try again.');

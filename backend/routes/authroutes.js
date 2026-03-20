@@ -73,11 +73,29 @@ const deleteAccountValidation = [
         .withMessage('Password is required to delete account')
 ];
 
+const updateProgressValidation = [
+    body('course')
+        .isIn(['htmlcss', 'javascript', 'python'])
+        .withMessage('Invalid course name'),
+    body('topic')
+        .notEmpty()
+        .withMessage('Topic is required')
+];
+
+const resetPasswordValidation = [
+    body('code')
+        .notEmpty()
+        .withMessage('Reset code is required'),
+    body('password')
+        .isLength({ min: 6 })
+        .withMessage('Password must be at least 6 characters long')
+];
+
 router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation, loginUser);
 router.post('/verify-email', verifyEmail);
 router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/reset-password', resetPasswordValidation, resetPassword);
 
 // ==========================================
 // Private Routes (Requires JWT Token)
@@ -85,7 +103,7 @@ router.post('/reset-password', resetPassword);
 router.put('/update-username', protect, updateUsernameValidation, updateUsername);
 router.put('/update-password', protect, updatePasswordValidation, updatePassword);
 router.delete('/delete-account', protect, deleteAccountValidation, deleteAccount);
-router.post('/update-progress', protect, updateProgress);
+router.post('/update-progress', protect, updateProgressValidation, updateProgress);
 router.get('/progress', protect, getProgress);
 
 module.exports = router;
