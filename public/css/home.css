@@ -71,7 +71,7 @@ body {
     color: var(--text-light);
     border: none;
     padding: 8px 20px;
-    border-radius: 5px;
+    border-radius: 5%;
     cursor: pointer;
     font-weight: bold;
     text-decoration: none;

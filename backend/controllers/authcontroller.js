@@ -163,11 +163,33 @@ exports.deleteAccount = asyncHandler(async (req, res, next) => {
 
 // @desc    Verify Email
 // @route   POST /api/auth/verify-email
-exports.verifyEmail = asyncHandler(async (req, res, next) => {
-    const { email, code } = req.body;
+exports.verifyEmail = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-    if (!email || !code) {
-        return next(new ErrorResponse('Email and verification code are required', 400));
+    try {
+        const { email, code } = req.body;
+
+        const hashedToken = crypto.createHash('sha256').update(code).digest('hex');
+
+        const user = await User.findOne({ 
+            email,
+            verificationToken: hashedToken 
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired verification code' });
+        }
+
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        res.status(200).json({ message: 'Email verified successfully. You can now log in.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 
     const hashedToken = crypto.createHash('sha256').update(code).digest('hex');
@@ -190,11 +212,37 @@ exports.verifyEmail = asyncHandler(async (req, res, next) => {
 
 // @desc    Update user progress
 // @route   POST /api/auth/update-progress
-exports.updateProgress = asyncHandler(async (req, res, next) => {
-    // Check validation errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return next(new ErrorResponse(errors.array()[0].msg, 400));
+exports.updateProgress = async (req, res) => {
+    try {
+        const { course, topic } = req.body;
+        
+        // BUG FIX: Validate that the course exists in our schema
+        const allowedCourses = ['htmlcss', 'javascript', 'python'];
+        if (!allowedCourses.includes(course)) {
+            return res.status(400).json({ message: 'Invalid course name' });
+        }
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (!user.progress[course]) {
+            user.progress[course] = [];
+        }
+
+        if (!user.progress[course].includes(topic)) {
+            user.progress[course].push(topic);
+            await user.save();
+        }
+
+        res.status(200).json({ 
+            message: 'Progress updated', 
+            progress: user.progress 
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 
     const { course, topic } = req.body;
@@ -238,32 +286,11 @@ exports.getProgress = asyncHandler(async (req, res, next) => {
 
 // @desc    Forgot Password
 // @route   POST /api/auth/forgot-password
-exports.forgotPassword = asyncHandler(async (req, res, next) => {
-    const user = await User.findOne({ email: req.body.email });
-
-    if (!user) {
-        return next(new ErrorResponse('There is no user with that email', 404));
+exports.forgotPassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
-
-    // Generate 6-digit code instead of a long token
-    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-    user.resetPasswordToken = crypto.createHash('sha256').update(resetCode).digest('hex');
-    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
-
-    await user.save({ validateBeforeSave: false });
-
-    const message = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-            <h2 style="color: #333; text-align: center;">Password Reset Request</h2>
-            <p>You have requested a password reset for your CodeLearn account.</p>
-            <div style="background: #f4f4f4; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; border-radius: 5px; margin: 20px 0;">
-                ${resetCode}
-            </div>
-            <p>This code is valid for 15 minutes. If you did not request this, please ignore this email.</p>
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-            <p style="font-size: 12px; color: #777; text-align: center;">© 2024 CodeLearn. All rights reserved.</p>
-        </div>
-    `;
 
     try {
         await sendEmail({
@@ -284,11 +311,39 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
 // @desc    Reset Password
 // @route   POST /api/auth/reset-password
-exports.resetPassword = asyncHandler(async (req, res, next) => {
-    // Check validation errors
+exports.resetPassword = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return next(new ErrorResponse(errors.array()[0].msg, 400));
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const { code, password } = req.body;
+
+        const hashedToken = crypto.createHash('sha256').update(code).digest('hex');
+
+        const user = await User.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpire: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired reset code' });
+        }
+
+        if (!password || password.length < 6) {
+             return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+        }
+
+        user.password = password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successful. You can now log in.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 
     const { code, password } = req.body;

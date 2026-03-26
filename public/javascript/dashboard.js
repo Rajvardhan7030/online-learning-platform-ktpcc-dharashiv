@@ -121,20 +121,32 @@ function renderChart(progressData) {
 
 // 3. Reset Progress Function
 async function resetProgress() {
-    if(confirm("Are you sure you want to reset all your progress?")) {
-        const user = JSON.parse(localStorage.getItem('ide_user'));
+    if(confirm("Are you sure you want to reset all your progress? This will clear data from both your browser and our servers.")) {
+        const userString = localStorage.getItem('ide_user');
+        if (!userString) return;
+        const user = JSON.parse(userString);
         
-        // Clear locally
-        localStorage.removeItem('completed_htmlcss');
-        localStorage.removeItem('completed_javascript');
-        localStorage.removeItem('completed_python');
-        
-        // Clear in backend if logged in (by sending empty progress or a special reset endpoint)
-        // For simplicity, we can just reload if we don't have a specific reset endpoint yet, 
-        // or we could implement a reset endpoint. Let's just stick to local for now or assume 
-        // the user wants to start over locally which will then sync if they complete a new topic.
-        // Actually, let's implement a simple clear if possible.
-        
-        window.location.reload(); 
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/reset-progress`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+            
+            if (response.ok) {
+                // Clear locally only after backend confirms
+                localStorage.removeItem('completed_htmlcss');
+                localStorage.removeItem('completed_javascript');
+                localStorage.removeItem('completed_python');
+                alert("Progress reset successfully.");
+                window.location.reload();
+            } else {
+                alert("Failed to reset progress on server. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error resetting progress:", error);
+            alert("Connection error. Could not reset progress.");
+        }
     }
 }

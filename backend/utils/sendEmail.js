@@ -1,27 +1,33 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
-// this is a gmail app system 
+    // Resend SMTP Configuration
     const transporter = nodemailer.createTransport({
-        service: 'Gmail', // Or Brevo, SendGrid, etc.
+        host: 'smtp.resend.com',
+        port: 465,
+        secure: true, // true for 465, false for other ports
         auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD,
+            user: 'resend', // This is literally "resend"
+            pass: process.env.RESEND_API_KEY,
         },
     });
-    // this for smtp mail service with middle men
-// const transporter = nodemailer.createTransport({
-//     host: process.env.EMAIL_HOST,
-//     port: Number(process.env.EMAIL_PORT),
-//     auth: {
-//         user: process.env.EMAIL_USERNAME,
-//         pass: process.env.EMAIL_PASSWORD,
-//     },
-// });
+
+    /**
+     * GMAIL SMTP CONFIGURATION (Backup)
+     * If you want to switch back to Gmail, comment out the Resend block above and uncomment this.
+     * 
+     * const transporter = nodemailer.createTransport({
+     *     service: 'Gmail',
+     *     auth: {
+     *         user: process.env.EMAIL_USERNAME,
+     *         pass: process.env.EMAIL_PASSWORD,
+     *     },
+     * });
+     */
 
     // Define the email options
     const mailOptions = {
-        from: `CodeLearn <${process.env.EMAIL_USERNAME}>`,
+        from: process.env.EMAIL_FROM || `CodeLearn <onboarding@resend.dev>`,
         to: options.email,
         subject: options.subject,
         html: options.html,
