@@ -73,11 +73,37 @@ const deleteAccountValidation = [
         .withMessage('Password is required to delete account')
 ];
 
+const verifyEmailValidation = [
+    body('email')
+        .isEmail()
+        .normalizeEmail()
+        .withMessage('Please provide a valid email'),
+    body('code')
+        .isLength({ min: 6, max: 6 })
+        .withMessage('Verification code must be 6 digits')
+];
+
+const forgotPasswordValidation = [
+    body('email')
+        .isEmail()
+        .normalizeEmail()
+        .withMessage('Please provide a valid email')
+];
+
+const resetPasswordValidation = [
+    body('code')
+        .isLength({ min: 6, max: 6 })
+        .withMessage('Reset code must be 6 digits'),
+    body('password')
+        .isLength({ min: 6 })
+        .withMessage('New password must be at least 6 characters long')
+];
+
 router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation, loginUser);
-router.post('/verify-email', verifyEmail);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post('/verify-email', verifyEmailValidation, verifyEmail);
+router.post('/forgot-password', forgotPasswordValidation, forgotPassword);
+router.post('/reset-password', resetPasswordValidation, resetPassword);
 
 // ==========================================
 // Private Routes (Requires JWT Token)
@@ -86,6 +112,19 @@ router.put('/update-username', protect, updateUsernameValidation, updateUsername
 router.put('/update-password', protect, updatePasswordValidation, updatePassword);
 router.delete('/delete-account', protect, deleteAccountValidation, deleteAccount);
 router.post('/update-progress', protect, updateProgress);
+router.post('/reset-progress', protect, (async (req, res) => {
+    try {
+        const User = require('../model/user.js');
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        
+        user.progress = { htmlcss: [], javascript: [], python: [] };
+        await user.save();
+        res.status(200).json({ message: 'Progress reset successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}));
 router.get('/progress', protect, getProgress);
 
 module.exports = router;

@@ -192,12 +192,13 @@ exports.deleteAccount = async (req, res) => {
 // @desc    Verify Email
 // @route   POST /api/auth/verify-email
 exports.verifyEmail = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { email, code } = req.body;
-
-        if (!email || !code) {
-            return res.status(400).json({ message: 'Email and verification code are required' });
-        }
 
         const hashedToken = crypto.createHash('sha256').update(code).digest('hex');
 
@@ -225,6 +226,13 @@ exports.verifyEmail = async (req, res) => {
 exports.updateProgress = async (req, res) => {
     try {
         const { course, topic } = req.body;
+        
+        // BUG FIX: Validate that the course exists in our schema
+        const allowedCourses = ['htmlcss', 'javascript', 'python'];
+        if (!allowedCourses.includes(course)) {
+            return res.status(400).json({ message: 'Invalid course name' });
+        }
+
         const user = await User.findById(req.user.id);
 
         if (!user) {
@@ -270,6 +278,11 @@ exports.getProgress = async (req, res) => {
 // @desc    Forgot Password
 // @route   POST /api/auth/forgot-password
 exports.forgotPassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const user = await User.findOne({ email: req.body.email });
 
@@ -320,12 +333,13 @@ exports.forgotPassword = async (req, res) => {
 // @desc    Reset Password
 // @route   POST /api/auth/reset-password
 exports.resetPassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { code, password } = req.body;
-
-        if (!code) {
-            return res.status(400).json({ message: 'Please provide the reset code' });
-        }
 
         const hashedToken = crypto.createHash('sha256').update(code).digest('hex');
 
