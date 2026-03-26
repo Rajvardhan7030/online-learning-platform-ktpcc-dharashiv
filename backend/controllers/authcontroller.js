@@ -25,11 +25,23 @@ exports.registerUser = async (req, res) => {
         // Check if user already exists
         const userExists = await User.findOne({ $or: [{ email }, { username }] });
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists with this email or username' });
+            // If user exists and is already verified, return error
+            if (userExists.isVerified) {
+                return res.status(400).json({ message: 'User already exists with this email or username' });
+            } else {
+                // If user exists but is NOT verified, delete them so they can re-register
+                // This prevents the "user already exists" error for unverified users
+                await User.findByIdAndDelete(userExists._id);
+            }
         }
 
         // Create user
-        const user = await User.create({ username, email, password });
+        const user = await User.create({ 
+            username, 
+            email, 
+            password,
+            otpLastSent: Date.now()
+        });
 
         if (user) {
             // Generate 6-digit verification code
@@ -38,9 +50,16 @@ exports.registerUser = async (req, res) => {
             await user.save({ validateBeforeSave: false });
 
             const message = `
-                <h1>Welcome to E-Learn!</h1>
-                <p>Your verification code is: <strong>${verificationCode}</strong></p>
-                <p>Please enter this code on the verification page to complete your registration.</p>
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                    <h2 style="color: #333; text-align: center;">Welcome to CodeLearn!</h2>
+                    <p>Thank you for signing up. Your verification code is:</p>
+                    <div style="background: #f4f4f4; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; border-radius: 5px; margin: 20px 0;">
+                        ${verificationCode}
+                    </div>
+                    <p>This code is used to verify your email address. If you did not request this, please ignore this email.</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                    <p style="font-size: 12px; color: #777; text-align: center;">© 2024 CodeLearn. All rights reserved.</p>
+                </div>
             `;
 
            try {
@@ -51,10 +70,11 @@ exports.registerUser = async (req, res) => {
                 });
 
                 res.status(201).json({
+                    status: 'success',
                     message: 'Registration successful! Please check your email to verify your account.'
                 });
             } catch (err) {
-                // THE FIX: Delete the incomplete user record so they aren't permanently stuck 👇
+                // Delete the incomplete user record so they aren't permanently stuck
                 await User.findByIdAndDelete(user._id);
 
                 res.status(500).json({ message: 'Email could not be sent. Please try registering again.', error: err.message });
@@ -67,6 +87,74 @@ exports.registerUser = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+// @desc    Resend OTP
+// @route   POST /api/auth/resend-otp
+exports.resendOTP = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ message: 'Please provide an email' });
+    }
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.isVerified) {
+            return res.status(400).json({ message: 'Account is already verified. Please login.' });
+        }
+
+        // Check if 1 minute has passed since last OTP
+        const oneMinute = 60 * 1000;
+        const timePassed = Date.now() - user.otpLastSent;
+
+        if (timePassed < oneMinute) {
+            const timeLeft = Math.ceil((oneMinute - timePassed) / 1000);
+            return res.status(429).json({ message: `Please wait ${timeLeft} seconds before requesting a new code.` });
+        }
+
+        // Generate new 6-digit verification code
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        user.verificationToken = crypto.createHash('sha256').update(verificationCode).digest('hex');
+        user.otpLastSent = Date.now();
+        await user.save({ validateBeforeSave: false });
+
+        const message = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                <h2 style="color: #333; text-align: center;">New Verification Code</h2>
+                <p>Your new verification code is:</p>
+                <div style="background: #f4f4f4; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; border-radius: 5px; margin: 20px 0;">
+                    ${verificationCode}
+                </div>
+                <p>This code is valid for 10 minutes. If you did not request this, please ignore this email.</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="font-size: 12px; color: #777; text-align: center;">© 2024 CodeLearn. All rights reserved.</p>
+            </div>
+        `;
+
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: 'New Email Verification Code',
+                html: message
+            });
+
+            res.status(200).json({ 
+                status: 'success',
+                message: 'New verification code sent to your email' 
+            });
+        } catch (err) {
+            res.status(500).json({ message: 'Email could not be sent', error: err.message });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 // @desc    Authenticate a user & get token
 // @route   POST /api/auth/login
 exports.loginUser = async (req, res) => {
@@ -86,6 +174,7 @@ exports.loginUser = async (req, res) => {
                 return res.status(401).json({ message: 'Please verify your email to log in' });
             }
             res.json({
+                status: 'success',
                 _id: user._id,
                 username: user.username,
                 email: user.email,
@@ -215,7 +304,10 @@ exports.verifyEmail = async (req, res) => {
         user.verificationToken = undefined;
         await user.save({ validateBeforeSave: false });
 
-        res.status(200).json({ message: 'Email verified successfully. You can now log in.' });
+        res.status(200).json({ 
+            status: 'success',
+            message: 'Email verified successfully. You can now log in.' 
+        });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }

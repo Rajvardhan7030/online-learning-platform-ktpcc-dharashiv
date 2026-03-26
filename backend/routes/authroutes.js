@@ -9,6 +9,7 @@ const {
     updatePassword, 
     deleteAccount,
     verifyEmail,
+    resendOTP,
     forgotPassword,
     resetPassword,
     updateProgress,
@@ -47,6 +48,13 @@ const loginValidation = [
     body('password')
         .notEmpty()
         .withMessage('Password is required')
+];
+
+const resendOTPValidation = [
+    body('email')
+        .isEmail()
+        .normalizeEmail()
+        .withMessage('Please provide a valid email')
 ];
 
 const updateUsernameValidation = [
@@ -102,6 +110,7 @@ const resetPasswordValidation = [
 router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation, loginUser);
 router.post('/verify-email', verifyEmailValidation, verifyEmail);
+router.post('/resend-otp', resendOTPValidation, resendOTP);
 router.post('/forgot-password', forgotPasswordValidation, forgotPassword);
 router.post('/reset-password', resetPasswordValidation, resetPassword);
 
