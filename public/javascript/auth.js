@@ -23,11 +23,15 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         return;
     }
 
+    // CRITICAL FIX: Remove confirmPassword before sending to backend
+    // Backend validator only accepts: username, email, password
+    const { confirmPassword, ...requestData } = data;
+
     try {
         const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(requestData)  // Send cleaned data without confirmPassword
         });
 
         const result = await response.json();
@@ -35,9 +39,15 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         if (response.ok && result.status === 'success') {
             alert('Registration Successful! ' + result.message);
             // Redirect to verification page
-            window.location.href = `/public/html/verify.html?email=${encodeURIComponent(data.email)}`;
+            window.location.href = `/public/html/verify.html?email=${encodeURIComponent(requestData.email)}`;
         } else {
-            showError(result.message || 'Registration failed');
+            // Handle validation errors array from express-validator
+            if (result.errors && Array.isArray(result.errors)) {
+                const errorMessages = result.errors.map(err => err.msg).join('\n');
+                showError(errorMessages);
+            } else {
+                showError(result.message || 'Registration failed');
+            }
         }
     } catch (error) {
         console.error('Registration Error:', error);
@@ -69,7 +79,13 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             // Redirect to dashboard or home
             window.location.href = '../../index.html';
         } else {
-            showError(result.message || 'Invalid credentials');
+            // Handle validation errors array
+            if (result.errors && Array.isArray(result.errors)) {
+                const errorMessages = result.errors.map(err => err.msg).join('\n');
+                showError(errorMessages);
+            } else {
+                showError(result.message || 'Invalid credentials');
+            }
         }
     } catch (error) {
         console.error('Login Error:', error);

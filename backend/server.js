@@ -11,7 +11,20 @@ const app = express();
 
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+            "worker-src": ["'self'", "blob:"],
+            "img-src": ["'self'", "data:", "https:"],
+        },
+    },
+}));
+
+// Body Parsing Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Startup Validation
 if (!process.env.JWT_SECRET) {
@@ -24,58 +37,53 @@ const allowedOrigins = [
     process.env.FRONTEND_URL || 'http://localhost:5500',
     process.env.IDE_URL || 'http://localhost:3000',
     'http://127.0.0.1:5500',
-    'http://127.0.0.1:3000'
+    'http://127.0.0.1:3000',
+    'http://localhost:5500',
+    'http://localhost:3000'
 ];
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        
-        // Check if the origin is in our strict list OR if it is a Vercel deployment
-        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('vercel.app')) {
+        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
             return callback(null, true);
         } else {
             console.error(`CORS Blocked: The origin ${origin} is not allowed.`);
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
+            return callback(new Error('CORS Policy violation'), false);
         }
     },
     credentials: true
 };
 app.use(cors(corsOptions));
+
 // trust proxy of free deploy
 app.set('trust proxy', 1);
+
 // Rate limiting
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     standardHeaders: true,
-  legacyHeaders: false,
+    legacyHeaders: false,
     message: 'Too many requests from this IP, please try again later.'
 });
-app.use( limiter);
+app.use(limiter);
 
-// Stricter rate limiting for auth endpoints
-const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5, // 5 login attempts per 15 minutes
-    message: 'Too many login attempts, please try again later.'
-});
-app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/register', authLimiter);
-
-app.use(express.json({ limit: '10mb' }));
-
-// MongoDB Connection with options
-mongoose.connect(process.env.MONGO_URI)
+// MongoDB Connection with retry logic
+const connectWithRetry = () => {
+    console.log('🔄 Attempting MongoDB connection...');
+    mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('✅ MongoDB connected successfully to elearning-ide'))
     .catch((err) => {
-        console.error('❌ MongoDB connection error:', err);
-        process.exit(1);
+        console.error('❌ MongoDB connection error:', err.message);
+        console.log('Retrying in 5 seconds...');
+        setTimeout(connectWithRetry, 5000);
     });
+};
 
-// Handle MongoDB disconnection
+connectWithRetry();
+
+// Handle MongoDB events
 mongoose.connection.on('disconnected', () => {
     console.log('⚠️ MongoDB disconnected');
 });

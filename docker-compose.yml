@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   # 1. Database: MongoDB
@@ -12,6 +12,11 @@ services:
     networks:
       - elearn-network
     restart: always
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # 2. Backend API
   backend:
@@ -25,10 +30,16 @@ services:
       - FRONTEND_URL=http://localhost:5500
       - IDE_URL=http://localhost:3000
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     networks:
       - elearn-network
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # 3. React IDE Micro-Frontend
   ide:
@@ -42,6 +53,8 @@ services:
     networks:
       - elearn-network
     restart: always
+    depends_on:
+      - backend
 
   # 4. Main Static Frontend
   frontend:
@@ -54,6 +67,8 @@ services:
     networks:
       - elearn-network
     restart: always
+    depends_on:
+      - backend
 
 networks:
   elearn-network:
