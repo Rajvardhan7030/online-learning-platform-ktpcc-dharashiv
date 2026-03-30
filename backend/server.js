@@ -122,15 +122,3 @@ process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err.message);
     process.exit(1);
 });
-
-// .env file should contain:
-// PORT=
-
-// MONGO_URI=
-
-// JWT_SECRET=
-// JWT_EXPIRE=
-// FRONTEND_URL=
-// NODE_ENV=
-// EMAIL_USERNAME=
-// EMAIL_PASSWORD=

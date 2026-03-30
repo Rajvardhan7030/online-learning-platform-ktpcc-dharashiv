@@ -10,8 +10,8 @@ const generateToken = (id) => {
     });
 };
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
+// Register a new user
+// POST /api/auth/register
 exports.registerUser = async (req, res) => {
     // Check validation errors
     const errors = validationResult(req);
@@ -88,8 +88,8 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-// @desc    Resend OTP
-// @route   POST /api/auth/resend-otp
+//    Resend OTP
+//   POST /api/auth/resend-otp
 exports.resendOTP = async (req, res) => {
     const { email } = req.body;
 
@@ -155,8 +155,8 @@ exports.resendOTP = async (req, res) => {
     }
 };
 
-// @desc    Authenticate a user & get token
-// @route   POST /api/auth/login
+//     Authenticate a user & get token
+//   POST /api/auth/login
 exports.loginUser = async (req, res) => {
     // Check validation errors
     const errors = validationResult(req);
@@ -191,9 +191,9 @@ exports.loginUser = async (req, res) => {
 
 // this setting controller logic
 
-// @desc    Update username
-// @route   PUT /api/auth/update-username
-// @access  Private (Requires Token)
+//   Update username
+//  PUT /api/auth/update-username
+//   Private
 exports.updateUsername = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -223,9 +223,9 @@ exports.updateUsername = async (req, res) => {
     }
 };
 
-// @desc    Update password
-// @route   PUT /api/auth/update-password
-// @access  Private
+//    Update password
+//    PUT /api/auth/update-password
+//  Private
 exports.updatePassword = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -252,9 +252,9 @@ exports.updatePassword = async (req, res) => {
     }
 };
 
-// @desc    Delete account
-// @route   DELETE /api/auth/delete-account
-// @access  Private
+//    Delete account
+//   DELETE /api/auth/delete-account
+//   Private
 exports.deleteAccount = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -278,8 +278,8 @@ exports.deleteAccount = async (req, res) => {
     }
 };
 
-// @desc    Verify Email
-// @route   POST /api/auth/verify-email
+//    Verify Email
+//    POST /api/auth/verify-email
 exports.verifyEmail = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -313,8 +313,8 @@ exports.verifyEmail = async (req, res) => {
     }
 };
 
-// @desc    Update user progress
-// @route   POST /api/auth/update-progress
+//  Update user progress
+// POST /api/auth/update-progress
 exports.updateProgress = async (req, res) => {
     try {
         const { course, topic } = req.body;
@@ -349,8 +349,8 @@ exports.updateProgress = async (req, res) => {
     }
 };
 
-// @desc    Get user progress
-// @route   GET /api/auth/progress
+//   Get user progress
+//  GET /api/auth/progress
 exports.getProgress = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
@@ -367,8 +367,8 @@ exports.getProgress = async (req, res) => {
     }
 };
 
-// @desc    Forgot Password
-// @route   POST /api/auth/forgot-password
+//    Forgot Password
+//   POST /api/auth/forgot-password
 exports.forgotPassword = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -422,8 +422,8 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
-// @desc    Reset Password
-// @route   POST /api/auth/reset-password
+//   Reset Password
+//    POST /api/auth/reset-password
 exports.resetPassword = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

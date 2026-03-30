@@ -12,18 +12,18 @@ const sendEmail = async (options) => {
         },
     });
 
-    /**
-     * GMAIL SMTP CONFIGURATION (Backup)
-     * If you want to switch back to Gmail, comment out the Resend block above and uncomment this.
-     * 
-     * const transporter = nodemailer.createTransport({
-     *     service: 'Gmail',
-     *     auth: {
-     *         user: process.env.EMAIL_USERNAME,
-     *         pass: process.env.EMAIL_PASSWORD,
-     *     },
-     * });
-     */
+    
+    //  GMAIL SMTP CONFIGURATION (Backup)
+    //  If you want to switch back to Gmail, comment out the Resend block above and uncomment this.
+     
+    //  const transporter = nodemailer.createTransport({
+    //      service: 'Gmail',
+    //      auth: {
+    //          user: process.env.EMAIL_USERNAME,
+    //          pass: process.env.EMAIL_PASSWORD,
+    //      },
+    // });
+     
 
     // Define the email options
     const mailOptions = {

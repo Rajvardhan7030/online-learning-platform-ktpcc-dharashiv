@@ -22,7 +22,7 @@ const { protect } = require('../middleware/authmiddleware.js');
 const router = express.Router();
 
 // ==========================================
-// Public Routes (No Token Needed)
+// Public Routes (Do NOT require JWT Token for access)
 // ==========================================
 const registerValidation = [
     body('username')
