@@ -11,6 +11,12 @@ const topicsData = {
             docTextHi: "<h4>वेब डेवलपमेंट में आपका स्वागत है!</h4><p>वेब डेवलपमेंट वेबसाइटों के निर्माण और रखरखाव की प्रक्रिया है। मुख्य प्रौद्योगिकियां HTML, CSS और JavaScript हैं।</p>",
             podcastHi: "public/audio/the intro of web-devlopment_hindi.m4a" 
         },
+         { 
+            titleEn: "1. Introduction to HTML",
+            youtubeUrlEn: "https://www.youtube.com/embed/dD2EISBDjWM?si=KTyR0rscBhCPQk5d", 
+            docTextEn: " ",
+            podcastEn: " ", 
+        },
     
     ]
 };
