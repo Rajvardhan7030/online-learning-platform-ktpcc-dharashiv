@@ -4,9 +4,9 @@ const { validationResult } = require('express-validator');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorResponse = require('../utils/errorResponse');
 
-// @desc    Execute code via Piston API
-// @route   POST /api/code/execute
-// @access  Public
+//    Execute code via Piston API
+//  POST /api/code/execute
+//   Public
 exports.executeCode = asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -58,9 +58,9 @@ exports.executeCode = asyncHandler(async (req, res, next) => {
     }
 });
 
-// @desc    Save a code snippet to the database
-// @route   POST /api/code/save
-// @access  Private (Requires JWT)
+//    Save a code snippet to the database
+//    POST /api/code/save
+//   Private (Requires JWT)
 exports.saveSnippet = asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -79,9 +79,9 @@ exports.saveSnippet = asyncHandler(async (req, res, next) => {
     res.status(201).json({ status: 'success', data: snippet });
 });
 
-// @desc    Get all snippets for the logged-in user
-// @route   GET /api/code/snippets
-// @access  Private (Requires JWT)
+//    Get all snippets for the logged-in user
+//   GET /api/code/snippets
+//  Private (Requires JWT)
 exports.getSnippets = asyncHandler(async (req, res, next) => {
     const snippets = await Snippet.find({ user: req.user._id }).sort({ createdAt: -1 });
     res.status(200).json({ status: 'success', data: snippets });

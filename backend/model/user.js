@@ -34,9 +34,21 @@ const userSchema = new mongoose.Schema({
         python: { type: [String], default: [] }
     },
     verificationToken: String,
+    otpLastSent: {
+        type: Date,
+        default: Date.now
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date
 }, { timestamps: true });
+
+// TTL Index: Automatically delete unverified users after 1 hour
+// This ensures that user data is only permanently stored if verified
+userSchema.index({ createdAt: 1 }, { 
+    expireAfterSeconds: 3600, 
+    partialFilterExpression: { isVerified: false } 
+});
+
 // Pre-save hook to hash the password
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();

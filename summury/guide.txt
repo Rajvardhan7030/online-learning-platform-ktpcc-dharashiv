@@ -1,0 +1,52 @@
+# CodeLearn: Low-Level Language Execution via Docker Guide
+
+To run low-level languages (C, C++, Java, Python) securely using Docker containers, follow these steps:
+
+## 1. Prerequisites
+- Docker and Docker Compose installed on your system.
+- Node.js installed (for initial runtime setup).
+
+## 2. Setting Up the Sandbox (Local Docker)
+The project now includes a Piston service in `docker-compose.yml`. This service acts as a secure sandbox for executing code.
+
+### Step 1: Start the Docker Environment
+Run the following command from the root directory:
+```bash
+docker-compose up -d
+```
+This will start MongoDB, the Backend API, the React IDE, the Static Frontend, and the Piston Sandbox.
+
+### Step 2: Install Language Runtimes
+By default, the Piston sandbox is empty. You need to install the languages you want to support. Use the provided script:
+```bash
+cd backend
+npm run install-runtimes
+```
+*Note: This script connects to the local Piston instance (port 2000) and downloads the necessary packages (GCC for C, OpenJDK for Java, etc.) into the `piston_packages` volume.*
+
+## 3. How it Works
+1. When a user submits code, the `backend` sends it to the `piston` container.
+2. The `piston` container compiles and executes the code in a temporary, isolated environment.
+3. The output is returned to the backend and then to the user's IDE.
+
+---
+
+# Render Deployment Guide: Environment Variables
+
+When deploying this project to Render (or any cloud platform), you need to set the following environment variables:
+
+### For Backend (Web Service)
+- `PORT`: 5000 (Render usually sets this automatically)
+- `NODE_ENV`: production
+- `MONGO_URI`: Your MongoDB Atlas connection string (e.g., `mongodb+srv://...`)
+- `JWT_SECRET`: A long, random string for securing tokens.
+- `FRONTEND_URL`: The URL where your static frontend is hosted (e.g., `https://your-app.onrender.com`)
+- `IDE_URL`: The URL where your React IDE is hosted (e.g., `https://ide-your-app.onrender.com`)
+- `RESEND_API_KEY`: (Optional) Your Resend API key for emails.
+- `EMAIL_FROM`: (Optional) The email address to send from.
+
+### For IDE Frontend (Static Site/Web Service)
+- `REACT_APP_API_URL`: The URL of your Backend API (e.g., `https://api-your-app.onrender.com`)
+
+### For Static Frontend
+- Ensure the `config.js` or API calls point to the correct Backend API URL.
