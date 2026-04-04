@@ -159,7 +159,7 @@ Open the root folder in VS Code, right-click `index.html`, and select **Open wit
 
 ## 🤝 Acknowledgments
 
-* Developed as a final year Computer Science project.
+* developed as group project
 * **Google Gemini AI:** Utilized as a pair-programming assistant for architectural brainstorming, debugging complex UI/backend integrations, and optimizing code structure.
 * **NotebookLM:** Used to generate the localized AI podcast audio files for the educational content.
 * **Grok:** Used for research of technology and structuring the syllabus.
