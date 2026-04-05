@@ -18,6 +18,9 @@ EMAIL_FROM=CodeLearn <onboarding@resend.dev>
 EMAIL_USERNAME=your-gmail@gmail.com
 EMAIL_PASSWORD=your-gmail-app-password
 
+# Execution Server (Local Piston in Docker)
+PISTON_URL=http://127.0.0.1:2000/api/v2/piston/execute
+
 # Frontend URLs
 FRONTEND_URL=http://localhost:5500
 IDE_URL=http://localhost:3000

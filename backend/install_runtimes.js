@@ -1,9 +1,11 @@
 // backend/install_runtimes.js
 async function installRuntimes() {
     try {
-        console.log("1. Fetching available packages from local Piston API...");
-        // Ask the local Docker container for all available language packages
-        const response = await fetch('http://127.0.0.1:2000/api/v2/packages');
+        // Use the 'piston' service name if in Docker, otherwise localhost
+        const PISTON_HOST = process.env.PISTON_HOST || '127.0.0.1:2000';
+        console.log(`1. Fetching available packages from ${PISTON_HOST}...`);
+        
+        const response = await fetch(`http://${PISTON_HOST}/api/v2/packages`);
         const packages = await response.json();
 
         // Helper function to find the newest version of a specific language
@@ -22,7 +24,7 @@ async function installRuntimes() {
         // Loop through and tell the Docker container to install each one
         for (const runtime of runtimesToInstall) {
             console.log(`-> Installing ${runtime.language} (v${runtime.language_version})...`);
-            await fetch('http://127.0.0.1:2000/api/v2/packages', {
+            await fetch(`http://${PISTON_HOST}/api/v2/packages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ language: runtime.language, version: runtime.language_version })
@@ -36,4 +38,10 @@ async function installRuntimes() {
     }
 }
 
-installRuntimes();
+// Export the function for manual or automated runs
+module.exports = { installRuntimes };
+
+// If this script is being run directly with `node install_runtimes.js`
+if (require.main === module) {
+    installRuntimes();
+}

@@ -15,20 +15,41 @@ exports.executeCode = asyncHandler(async (req, res, next) => {
 
     const { language, code } = req.body;
 
+    // Prioritize local Docker Piston API if running, fallback to public API
+    const PISTON_URL = process.env.PISTON_URL || 'http://127.0.0.1:2000/api/v2/piston/execute';
+    const PUBLIC_PISTON_URL = 'https://emkc.org/api/v2/piston/execute';
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
 
     try {
-        const response = await fetch('https://emkc.org/api/v2/piston/execute', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                language: language,
-                version: "*", 
-                files: [{ content: code }]
-            }),
-            signal: controller.signal
-        });
+        let response;
+        try {
+            // Attempt local Docker execution first
+            response = await fetch(PISTON_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    language: language,
+                    version: "*", 
+                    files: [{ content: code }]
+                }),
+                signal: controller.signal
+            });
+        } catch (localError) {
+            console.warn('Local Piston API not reachable, falling back to public API...');
+            // Fallback to public API
+            response = await fetch(PUBLIC_PISTON_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    language: language,
+                    version: "*", 
+                    files: [{ content: code }]
+                }),
+                signal: controller.signal
+            });
+        }
 
         clearTimeout(timeout);
 

@@ -115,8 +115,19 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
+    
+    // Professional Touch: Auto-install runtimes if running in Docker/Development
+    if (process.env.NODE_ENV !== 'test') {
+        try {
+            const { installRuntimes } = require('./install_runtimes');
+            // We'll run this in the background so it doesn't block server start
+            installRuntimes().catch(err => console.error('Runtime auto-install failed:', err.message));
+        } catch (err) {
+            console.log('💡 Note: install_runtimes.js not found or failed to load. Skipping auto-provisioning.');
+        }
+    }
 });
 
 // Handle unhandled promise rejections

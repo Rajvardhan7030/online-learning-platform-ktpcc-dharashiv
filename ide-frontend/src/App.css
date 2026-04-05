@@ -51,24 +51,80 @@ body {
   border-right: 1px solid #555;
 }
 
-.output-section {
+.editor-wrapper {
   flex: 1;
-  padding: 20px;
-  background-color: #252526;
   display: flex;
   flex-direction: column;
 }
 
+.output-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.output-modal {
+  width: 80%;
+  height: 80%;
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.output-header {
+  padding: 15px 20px;
+  background-color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+}
+
+.output-header h3 {
+  color: #4fc1ff;
+  margin: 0;
+}
+
+.close-output {
+  background: none !important;
+  border: none !important;
+  color: #aaa !important;
+  font-size: 28px !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.close-output:hover {
+  color: #fff !important;
+}
+
 .output-box {
   flex: 1;
+  padding: 20px;
   background-color: #000;
-  padding: 15px;
-  border-radius: 5px;
-  font-family: 'Courier New', Courier, monospace;
-  white-space: pre-wrap; /* Ensures line breaks in output render correctly */
-  min-height: 200px;
   overflow-y: auto;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Add to the bottom of src/App.css */
 
 .auth-modal-overlay {

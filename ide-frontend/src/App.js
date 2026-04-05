@@ -23,6 +23,7 @@ function App() {
     const [user, setUser] = useState(null);
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [saveStatus, setSaveStatus] = useState('');
+    const [showOutput, setShowOutput] = useState(false);
 
     const setCode = (newCode) => {
         setCodes(prev => ({ ...prev, [language]: newCode }));
@@ -65,21 +66,24 @@ function App() {
             setOutput('');
             window.location.href = MAIN_FRONTEND_URL;
         }
-    }, []);
+    }, [MAIN_FRONTEND_URL]);
 
     const handleRunCode = async () => {
         setIsLoading(true);
         if (language === 'html') {
             setOutput(code);
             setIsLoading(false);
+            setShowOutput(true);
             return;
         }
         
         try {
             const response = await axios.post(`${API_URL}/api/code/execute`, { language, code });
             setOutput(response.data.output || "No output returned.");
+            setShowOutput(true);
         } catch (error) {
             setOutput(error.response?.data?.output || error.response?.data?.message || "Error executing code");
+            setShowOutput(true);
         } finally {
             setIsLoading(false);
         }
@@ -114,13 +118,14 @@ function App() {
         setOutput('');
     };
 
-    // The return() block stays exactly the same as your original code
     return (
         <div className="ide-container">
             <header className="header">
-                <h2>eLearning IDE</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <img src="https://via.placeholder.com/40" alt="Logo" style={{ borderRadius: '50%' }} />
+                    <h2 style={{ margin: 0, fontSize: '20px', color: '#6C63FF' }}>CodeLearn IDE</h2>
+                </div>
                 
-                {/* Center controls: Language & Run */}
                 <div className="controls">
                     <select value={language} onChange={handleLanguageChange}>
                         <option value="html">HTML/CSS/JS (Web)</option>
@@ -140,7 +145,6 @@ function App() {
                     <span style={{ marginLeft: '10px', color: '#4fc1ff', fontSize: '14px' }}>{saveStatus}</span>
                 </div>
 
-                {/* Right side: Login/Logout controls */}
                 <div>
                     {user ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -154,19 +158,29 @@ function App() {
             </header>
 
             <div className="main-content">
-                <CodeEditor language={language === 'html' ? 'html' : language} code={code} setCode={setCode} />
-                <div className="output-section">
-                    <h3>Output</h3>
-                    <div className="output-box">
-                        {language === 'html' ? (
-                            <iframe srcDoc={output} title="output" sandbox="allow-scripts" style={{ width: '100%', height: '100%', border: 'none', backgroundColor: '#fff' }} />
-                        ) : (
-                            <pre style={{ margin: 0, color: '#ddd' }}>
-                                {output || "Click 'Run Code' to see the output here."}
-                            </pre>
-                        )}
-                    </div>
+                <div className="editor-wrapper" style={{ width: '100%' }}>
+                    <CodeEditor language={language === 'html' ? 'html' : language} code={code} setCode={setCode} />
                 </div>
+                
+                {showOutput && (
+                    <div className="output-overlay">
+                        <div className="output-modal">
+                            <div className="output-header">
+                                <h3>Execution Result</h3>
+                                <button className="close-output" onClick={() => setShowOutput(false)}>&times;</button>
+                            </div>
+                            <div className="output-box">
+                                {language === 'html' ? (
+                                    <iframe srcDoc={output} title="output" sandbox="allow-scripts" style={{ width: '100%', height: '100%', border: 'none', backgroundColor: '#fff' }} />
+                                ) : (
+                                    <pre style={{ margin: 0, color: '#ddd', whiteSpace: 'pre-wrap' }}>
+                                        {output || "Execution finished with no output."}
+                                    </pre>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Render the modal if showAuthModal is true */}
