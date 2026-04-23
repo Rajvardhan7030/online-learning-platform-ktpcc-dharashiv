@@ -33,6 +33,21 @@ const userSchema = new mongoose.Schema({
         javascript: { type: [String], default: [] },
         python: { type: [String], default: [] }
     },
+    badges: [{
+        slug: { type: String, required: true },
+        title: { type: String, required: true },
+        description: { type: String, required: true },
+        unlockedAt: { type: Date, default: Date.now }
+    }],
+    examStats: {
+        examsTaken: { type: Number, default: 0 },
+        highestScore: { type: Number, default: 0 },
+        upcomingExam: {
+            title: { type: String, default: 'Frontend Fundamentals Assessment' },
+            description: { type: String, default: 'Timed practice exam covering HTML, CSS, and JavaScript basics.' },
+            status: { type: String, default: 'planned' }
+        }
+    },
     verificationToken: String,
     otpLastSent: {
         type: Date,

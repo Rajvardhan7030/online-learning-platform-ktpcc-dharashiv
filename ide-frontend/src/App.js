@@ -66,7 +66,7 @@ function App() {
             setOutput('');
             window.location.href = MAIN_FRONTEND_URL;
         }
-    }, [MAIN_FRONTEND_URL]);
+    }, []);
 
     const handleRunCode = async () => {
         setIsLoading(true);
@@ -122,8 +122,8 @@ function App() {
         <div className="ide-container">
             <header className="header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <img src="https://via.placeholder.com/40" alt="Logo" style={{ borderRadius: '50%' }} />
-                    <h2 style={{ margin: 0, fontSize: '20px', color: '#6C63FF' }}>CodeLearn IDE</h2>
+                    <img src="logo.jpeg" alt="Logo" style={{ borderRadius: '50%' }} />
+                    <h2 style={{ margin: 0, fontSize: '20px', color: '#6C63FF' }}>E-Learn IDE</h2>
                 </div>
                 
                 <div className="controls">
@@ -131,8 +131,7 @@ function App() {
                         <option value="html">HTML/CSS/JS (Web)</option>
                         <option value="javascript">JavaScript (Node)</option>
                         <option value="python">Python</option>
-                        <option value="java">Java</option>
-                        <option value="c">C</option>
+                       
                     </select>
                     <button onClick={handleRunCode} disabled={isLoading}>
                         {isLoading ? 'Running...' : 'Run Code'}

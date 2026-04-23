@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Forum - E-Learn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/forum.css">
+</head>
+<body>
+    <div class="navbar">
+        <img id="logo-img" src="../../image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+        <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
+
+        <a href="../../index.html">Home</a>
+        <a href="tutorial.html">Tutorials</a>
+        <a href="forum.html">Forum</a>
+        <a href="#" onclick="openIDE(event)">Console</a>
+
+        <div class="nav-auth-section" style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
+            <div id="auth-buttons">
+                <a href="auth.html" class="btn login-btn">Sign In</a>
+            </div>
+
+            <div id="profile-menu" class="nav-profile" style="display: none;">
+                <div class="profile-btn" onclick="toggleDropdown()">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <strong id="display-name">Developer</strong>
+                        <span id="display-email">student@university.edu</span>
+                    </div>
+                    <hr>
+                    <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    <a href="forum.html"><i class="fas fa-comments"></i> Forum</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <hr>
+                    <a href="#" onclick="logout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="forum-main">
+        <section class="forum-hero">
+            <div>
+                <span class="eyebrow">Community Support</span>
+                <h1>Discussion Forum</h1>
+                <p>Students can raise questions, share blockers, and answer each other inside the platform.</p>
+            </div>
+            <div class="forum-stats">
+                <div>
+                    <strong id="thread-count">0</strong>
+                    <span>Questions</span>
+                </div>
+                <div>
+                    <strong id="answer-count">0</strong>
+                    <span>Answers</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="forum-layout">
+            <aside class="forum-sidebar">
+                <form id="thread-form" class="forum-card">
+                    <h2>Ask a Question</h2>
+                    <p>Logged-in users can post questions for the community.</p>
+                    <label for="thread-title">Title</label>
+                    <input id="thread-title" name="title" type="text" maxlength="120" placeholder="Example: Why is my flexbox layout breaking?" required>
+
+                    <label for="thread-tags">Tags</label>
+                    <input id="thread-tags" name="tags" type="text" placeholder="html, css, javascript">
+
+                    <label for="thread-body">Details</label>
+                    <textarea id="thread-body" name="body" rows="8" maxlength="4000" placeholder="Describe the issue, what you tried, and what output you expected." required></textarea>
+
+                    <button type="submit">Post Question</button>
+                    <p id="thread-form-message" class="form-message"></p>
+                </form>
+
+                <article class="forum-card roadmap-card">
+                    <h2>Exam and Badge Plan</h2>
+                    <p>The dashboard now exposes badge unlocks and an assessment roadmap so the exam system has a defined place in the product.</p>
+                    <ul>
+                        <li>Badges unlock from learning milestones.</li>
+                        <li>Upcoming exam status is visible on the dashboard.</li>
+                        <li>The next backend step is storing exam attempts and scores.</li>
+                    </ul>
+                </article>
+            </aside>
+
+            <section id="thread-list" class="thread-list"></section>
+        </section>
+    </main>
+
+    <script src="../javascript/config.js"></script>
+    <script src="../javascript/index.js"></script>
+    <script src="../javascript/forum.js"></script>
+</body>
+</html>

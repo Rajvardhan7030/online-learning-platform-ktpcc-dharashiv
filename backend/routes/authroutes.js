@@ -128,6 +128,16 @@ router.post('/reset-progress', protect, (async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
         
         user.progress = { htmlcss: [], javascript: [], python: [] };
+        user.badges = [];
+        user.examStats = {
+            examsTaken: 0,
+            highestScore: 0,
+            upcomingExam: {
+                title: 'Frontend Fundamentals Assessment',
+                description: 'Timed practice exam covering HTML, CSS, and JavaScript basics.',
+                status: 'planned'
+            }
+        };
         await user.save();
         res.status(200).json({ message: 'Progress reset successfully' });
     } catch (error) {

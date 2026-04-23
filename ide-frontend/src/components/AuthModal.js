@@ -7,10 +7,12 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
     const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setMessage('');
 
         // Password Matching Validation (Only for Registration)
         if (!isLogin && formData.password !== formData.confirmPassword) {
@@ -28,17 +30,25 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
 
         try {
             const response = await axios.post(`${API_URL}${endpoint}`, requestData);
-            
-            // Extract status and rest of the user data
-            const { status, ...userData } = response.data;
-            
-            // On success, save user data (including the JWT) to local storage
-            localStorage.setItem('ide_user', JSON.stringify(userData));
-            
-            // Notify the parent App component that login was successful
-            onLoginSuccess(userData);
-            onClose(); // Close the modal
+
+            if (isLogin) {
+                const { status, ...userData } = response.data;
+                localStorage.setItem('ide_user', JSON.stringify(userData));
+                onLoginSuccess(userData);
+                onClose();
+                return;
+            }
+
+            setMessage(response.data.message || 'Registration successful. Verify your email before logging in.');
+            setIsLogin(true);
+            setFormData((prev) => ({ ...prev, password: '', confirmPassword: '' }));
         } catch (err) {
+            const apiErrors = err.response?.data?.errors;
+            if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+                setError(apiErrors.map((item) => item.msg).join(' '));
+                return;
+            }
+
             setError(err.response?.data?.message || 'An error occurred. Please try again.');
         }
     };
@@ -49,6 +59,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
                 <h3>{isLogin ? 'Log In' : 'Register'}</h3>
                 
                 {error && <p style={{ color: '#f48771', fontSize: '14px', marginBottom: '10px' }}>{error}</p>}
+                {message && <p style={{ color: '#7ee787', fontSize: '14px', marginBottom: '10px' }}>{message}</p>}
                 
                 <form onSubmit={handleSubmit}>
                     {/* Only show username field if registering */}
@@ -79,7 +90,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
                     <button type="submit">{isLogin ? 'Log In' : 'Sign Up'}</button>
                 </form>
 
-                <div className="toggle-text" onClick={() => { setIsLogin(!isLogin); setError(''); }}>
+                <div className="toggle-text" onClick={() => { setIsLogin(!isLogin); setError(''); setMessage(''); }}>
                     {isLogin ? "Need an account? Register" : "Already have an account? Log in"}
                 </div>
                 <div className="toggle-text" style={{ color: '#aaa', marginTop: '10px' }} onClick={onClose}>

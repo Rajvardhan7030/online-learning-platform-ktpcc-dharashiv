@@ -19,6 +19,7 @@
         <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
         
         <a href="/public/html/tutorial.html">Tutorials</a>
+        <a href="/public/html/forum.html">Forum</a>
         <a href="#" onclick="openIDE(event)">Console</a>
         
         <div class="nav-auth-section" style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
@@ -37,6 +38,7 @@
                     </div>
                     <hr>
                     <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    <a href="forum.html"><i class="fas fa-comments"></i> Forum</a>
                     <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
                     <hr>
                     <a href="#" onclick="logout()" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -55,6 +57,20 @@
                 <i class="fas fa-redo"></i> Reset Progress
             </button>
         </header>
+
+        <section class="dashboard-overview">
+            <article class="overview-card">
+                <span class="overview-label">Learning Summary</span>
+                <strong id="overview-progress">0/29 topics completed</strong>
+                <p>Discussion forum is now available for peer questions and answers.</p>
+            </article>
+            <article class="overview-card accent-card">
+                <span class="overview-label">Assessment Roadmap</span>
+                <strong id="exam-title">Frontend Fundamentals Assessment</strong>
+                <p id="exam-description">Timed practice exam covering HTML, CSS, and JavaScript basics.</p>
+                <small id="exam-meta">0 exams taken • Highest score 0% • Status: planned</small>
+            </article>
+        </section>
 
         <section class="graph-section" style="margin-bottom: 40px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
             <h2 class="section-title">Overall Progress</h2>
@@ -103,6 +119,11 @@
                     <button class="continue-btn" disabled>Coming Soon</button>
                 </div>
             </div>
+        </section>
+
+        <section class="progress-section">
+            <h2 class="section-title">Badges and Recognition</h2>
+            <div id="badge-list" class="badge-grid"></div>
         </section>
     </main>
 

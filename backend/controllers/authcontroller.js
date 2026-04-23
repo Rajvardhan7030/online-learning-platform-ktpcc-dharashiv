@@ -4,6 +4,45 @@ const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 const { validationResult } = require('express-validator');
 
+const badgeDefinitions = [
+    {
+        slug: 'first-step',
+        title: 'First Step',
+        description: 'Complete your first learning topic on the platform.',
+        condition: (progress) => Object.values(progress).some((topics) => topics.length >= 1)
+    },
+    {
+        slug: 'htmlcss-fundamentals',
+        title: 'HTML & CSS Explorer',
+        description: 'Complete all HTML & CSS fundamentals topics.',
+        condition: (progress) => (progress.htmlcss || []).length >= 7
+    },
+    {
+        slug: 'polyglot-learner',
+        title: 'Polyglot Learner',
+        description: 'Complete at least one topic in each learning track.',
+        condition: (progress) => ['htmlcss', 'javascript', 'python'].every((course) => (progress[course] || []).length >= 1)
+    }
+];
+
+const syncBadges = (user) => {
+    if (!Array.isArray(user.badges)) {
+        user.badges = [];
+    }
+
+    for (const badge of badgeDefinitions) {
+        const alreadyUnlocked = user.badges.some((existingBadge) => existingBadge.slug === badge.slug);
+        if (!alreadyUnlocked && badge.condition(user.progress || {})) {
+            user.badges.push({
+                slug: badge.slug,
+                title: badge.title,
+                description: badge.description,
+                unlockedAt: new Date()
+            });
+        }
+    }
+};
+
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { 
         expiresIn: process.env.JWT_EXPIRE || '30d'
@@ -337,12 +376,15 @@ exports.updateProgress = async (req, res) => {
 
         if (!user.progress[course].includes(topic)) {
             user.progress[course].push(topic);
+            syncBadges(user);
             await user.save();
         }
 
         res.status(200).json({ 
             message: 'Progress updated', 
-            progress: user.progress 
+            progress: user.progress,
+            badges: user.badges || [],
+            examStats: user.examStats
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -359,8 +401,16 @@ exports.getProgress = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        const previousBadgeCount = Array.isArray(user.badges) ? user.badges.length : 0;
+        syncBadges(user);
+        if (user.badges.length !== previousBadgeCount) {
+            await user.save();
+        }
+
         res.status(200).json({ 
-            progress: user.progress || { htmlcss: [], javascript: [], python: [] }
+            progress: user.progress || { htmlcss: [], javascript: [], python: [] },
+            badges: user.badges || [],
+            examStats: user.examStats
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });

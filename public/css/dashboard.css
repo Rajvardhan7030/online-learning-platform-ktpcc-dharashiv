@@ -153,3 +153,81 @@ body {
     color: #d9534f; /* Danger Red */
     border-color: #d9534f;
 }
+
+.dashboard-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.overview-card {
+    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.accent-card {
+    background: linear-gradient(135deg, #eef6ff 0%, #ffffff 100%);
+}
+
+.overview-label {
+    display: inline-block;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.overview-card strong {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.overview-card p,
+.overview-card small {
+    color: var(--text-muted);
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.badge-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.badge-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #e8f1ff;
+    color: var(--primary-blue);
+    font-size: 1.3rem;
+}
+
+.badge-card h3 {
+    margin-bottom: 6px;
+    color: var(--text-main);
+}
+
+.badge-card p,
+.empty-state {
+    color: var(--text-muted);
+}

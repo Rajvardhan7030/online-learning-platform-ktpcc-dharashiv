@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/authroutes');
 const codeRoutes = require('./routes/coderoutes');
+const forumRoutes = require('./routes/forumroutes');
 const app = express();
 
 
@@ -97,6 +98,7 @@ const errorHandler = require('./middleware/errorMiddleware');
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/code', codeRoutes);
+app.use('/api/forum', forumRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
