@@ -10,7 +10,7 @@
 <body class="auth-body">
     
   <div class="navbar" style="position: absolute; width: 100%; top: 0;"> 
-      <img id="logo-img" src="../../image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
+      <img id="logo-img" src="/image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
         <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
         <a href="../../index.html" style="margin-left: auto;" class="btn">Back to Home</a>
     </div>
@@ -41,7 +41,8 @@
                             <p>Sign in to continue your learning journey.</p>
                         </div>
                         
-                      <form id="login-form" class="auth-form">
+                        <form id="login-form" class="auth-form">
+                           <div id="login-error" class="error-message" style="display: none; color: #ff4d4d; margin-bottom: 15px; font-size: 0.9rem; text-align: center; background: #fff5f5; padding: 10px; border-radius: 5px;"></div>
                            <div class="input-group">
                                <i class="fas fa-envelope icon-left"></i>
                                <input type="email" name="email" placeholder="Email Address" required>
@@ -50,7 +51,7 @@
                           <div class="input-group">
                               <i class="fas fa-lock icon-left" style="pointer-events: none;"></i>
                               <input type="password" id="login-password" name="password" placeholder="Password" required>
-                              <i id="show-btn" class="fas fa-eye icon-right" onclick="togglePassword('login-password', this)"></i>
+                              <i class="fas fa-eye icon-right show-password-btn" onclick="togglePassword('login-password', this)"></i>
                           </div>
 
                            <div style="text-align: right; margin-bottom: 15px;">
@@ -71,6 +72,7 @@
                         </div>
                         
                     <form id="register-form" class="auth-form">
+                            <div id="register-error" class="error-message" style="display: none; color: #ff4d4d; margin-bottom: 15px; font-size: 0.9rem; text-align: center; background: #fff5f5; padding: 10px; border-radius: 5px;"></div>
                             <div class="input-group">
                                 <i class="fas fa-user icon-left"></i>
                                 <input type="text" name="username" placeholder="Username" required>
@@ -83,13 +85,13 @@
                           <div class="input-group">
                                 <i class="fas fa-lock icon-left" style="pointer-events: none;"></i>
                                 <input type="password" id="register-password" name="password" placeholder="Password" required>
-                                <i id="show-btn"  class="fas fa-eye icon-right" onclick="togglePassword('register-password', this)"></i>
+                                <i class="fas fa-eye icon-right show-password-btn" onclick="togglePassword('register-password', this)"></i>
                             </div>
 
                             <div class="input-group">
                                 <i class="fas fa-lock icon-left" style="pointer-events: none;"></i>
                                 <input type="password" id="register-confirm-password" name="confirmPassword" placeholder="Confirm Password" required>
-                                <i id="show-btn" class="fas fa-eye icon-right" onclick="togglePassword('register-confirm-password', this)"></i>
+                                <i class="fas fa-eye icon-right show-password-btn" onclick="togglePassword('register-confirm-password', this)"></i>
                             </div>
                             
                             <button type="submit" class="auth-btn">Sign Up</button>

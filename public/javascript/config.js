@@ -1,8 +1,12 @@
 // API Configuration
 const hostname = window.location.hostname;
 
-// Check if we are running locally via localhost or Live Server (127.0.0.1)
-const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+// Check if we are running locally via localhost, Live Server (127.0.0.1), or a local network IP
+const isLocal = hostname === 'localhost' || 
+                 hostname === '127.0.0.1' || 
+                 hostname.startsWith('192.168.') || 
+                 hostname.startsWith('10.') || 
+                 hostname.startsWith('172.');
 
 // Replace with your actual production URLs after deploying to Render/Vercel
 const API_BASE_URL = isLocal 
