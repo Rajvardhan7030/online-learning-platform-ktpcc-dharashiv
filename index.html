@@ -10,6 +10,18 @@
     
     </head>
     <body> 
+    <!-- Splash Overlay -->
+    <div id="splash-overlay" class="splash-overlay">
+      <div class="splash-content">
+        <img src="image/logo.jpeg" alt="E-Learn Logo" class="splash-logo" id="splash-logo-img">
+        <div class="splash-brand">
+          <span class="splash-brand-dark">E-</span><span class="splash-brand-blue">learn</span>
+          <span class="splash-cursor">|</span>
+        </div>
+        <p class="splash-tagline">Learn. Code. Build.</p>
+      </div>
+    </div>
+
     <div class="navbar"> 
         <img id="logo-img" src="image/logo.jpeg" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
         <span id="logo-name1">E-</span><span id="logo-name2">learn</span>
@@ -47,7 +59,7 @@
     </div>
     <!-- the banner section -->
     <div class="hero-section">
-        <div class="hero-content">
+        <div class="hero-content hero-animate">
             <h1>Master Coding with Interactive Learning</h1>
             <p>Your all-in-one platform to learn, practice, and build. Write code directly in our live online IDE, follow step-by-step tutorials, and track your progress.</p>
             <div class="hero-buttons">
@@ -55,10 +67,70 @@
                 <a href="public/html/tutorial.html" class="btn secondary-btn protected-link">Explore Tutorials</a>
             </div>
         </div>
-        <div class="hero-image">
+        <div class="hero-image hero-animate">
             <img src="image/ide-preview.png" alt="Platform Interactive IDE Preview" onerror="this.src='https://via.placeholder.com/600x400?text=Interactive+IDE+Preview'">
         </div>
     </div>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+      <div class="features-container">
+        <div class="features-header scroll-reveal">
+          <h2>Why Learn With <span class="highlight">E-Learn</span>?</h2>
+          <p>Everything you need to master modern web development in one powerful platform.</p>
+        </div>
+        
+        <div class="features-grid">
+          <div class="feature-card scroll-reveal">
+            <div class="feature-icon">
+              <i class="fas fa-laptop-code"></i>
+            </div>
+            <h3>Live IDE</h3>
+            <p>Write, run, and debug code directly in your browser with our integrated React-powered development environment.</p>
+          </div>
+          
+          <div class="feature-card scroll-reveal">
+            <div class="feature-icon">
+              <i class="fas fa-robot"></i>
+            </div>
+            <h3>AI-Powered Content</h3>
+            <p>Get personalized documentation and AI-voiced podcasts in English & Hindi tailored to your learning pace.</p>
+          </div>
+          
+          <div class="feature-card scroll-reveal">
+            <div class="feature-icon">
+              <i class="fas fa-video"></i>
+            </div>
+            <h3>Curated Tutorials</h3>
+            <p>Time-trimmed YouTube tutorials merged with interactive exercises for hands-on learning.</p>
+          </div>
+          
+          <div class="feature-card scroll-reveal">
+            <div class="feature-icon">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <h3>Track Progress</h3>
+            <p>Visual dashboards and course completion analytics to keep you motivated and on track.</p>
+          </div>
+          
+          <div class="feature-card scroll-reveal">
+            <div class="feature-icon">
+              <i class="fas fa-language"></i>
+            </div>
+            <h3>Full Localization</h3>
+            <p>Switch seamlessly between English and Hindi for all core learning modules and content.</p>
+          </div>
+          
+          <div class="feature-card scroll-reveal">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Secure Auth</h3>
+            <p>Cross-port JWT authentication between the static frontend and the live IDE backend.</p>
+          </div>
+        </div>
+      </div>
+    </section>
     <script src="public/javascript/config.js"></script>
     <script src="public/javascript/index.js"></script>
     </body>

@@ -21,6 +21,56 @@
     
 // 1. Load User Data & Auto-Redirect
 document.addEventListener("DOMContentLoaded", () => {
+    // === PART 1: Splash Screen & Hero Animation ===
+    const splashOverlay = document.getElementById('splash-overlay');
+    const heroContent = document.querySelector('.hero-content');
+    const heroImage = document.querySelector('.hero-image');
+    const hasVisited = localStorage.getItem('codelearn_visited');
+
+    if (hasVisited) {
+        // Skip splash for returning users
+        if (splashOverlay) splashOverlay.style.display = 'none';
+        if (heroContent) heroContent.classList.add('hero-visible');
+        if (heroImage) heroImage.classList.add('hero-visible');
+    } else {
+        // First visit: play splash sequence
+        if (splashOverlay) {
+            setTimeout(() => {
+                splashOverlay.classList.add('splash-exit');
+                
+                setTimeout(() => {
+                    splashOverlay.classList.add('splash-hidden');
+                    
+                    // Trigger hero entrance
+                    if (heroContent) heroContent.classList.add('hero-visible');
+                    if (heroImage) heroImage.classList.add('hero-visible');
+                    
+                    // Mark as visited
+                    localStorage.setItem('codelearn_visited', 'true');
+                }, 800); // Wait for fade-out
+            }, 2500); // Show splash for 2.5s
+        }
+    }
+
+    // === PART 2: Scroll Reveal System ===
+    const revealElements = document.querySelectorAll('.scroll-reveal');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                // Optional: stop observing once revealed
+                // revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // === EXISTING AUTH LOGIC ===
     const userDataString = localStorage.getItem('ide_user'); 
     const currentPath = window.location.pathname;
     
