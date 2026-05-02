@@ -177,6 +177,10 @@ body {
     background-color: #fff5f5 !important;
 }
 
+/* Hide protected content by default (JS will show it if logged in) */
+.protected-link {
+    display: none;
+}
 @keyframes dropFadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }

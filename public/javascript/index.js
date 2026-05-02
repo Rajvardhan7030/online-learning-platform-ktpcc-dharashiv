@@ -27,13 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Check if the user is exactly on the root or index.html page
     const isWelcomePage = currentPath === '/' || currentPath.endsWith('index.html');
     
+    // Define protected pages that require login
+    const protectedPages = ['tutorial.html', 'forum.html', 'dashboard.html', 'settings.html'];
+    const isProtectedPage = protectedPages.some(page => currentPath.endsWith(page));
+
     if (userDataString) {
-        // ONLY redirect if they are on the welcome page. Let them browse tutorials freely!
+        // ONLY redirect if they are on the welcome page.
         if (isWelcomePage) {
             window.location.href = 'public/html/dashboard.html';
             return; // Stop execution so it redirects cleanly
         }
         
+        // Show protected links for logged-in users
+        document.querySelectorAll('.protected-link').forEach(link => {
+            link.style.display = 'inline-block';
+        });
+
         // For all other pages (Dashboard, Tutorial): Show profile menu, hide auth buttons
         const authButtons = document.getElementById('auth-buttons');
         const profileMenu = document.getElementById('profile-menu');
@@ -53,7 +62,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return; 
     } 
     
-    // USER IS LOGGED OUT: Ensure Auth buttons are visible
+    // USER IS LOGGED OUT: 
+    
+    // 1. Hide protected links from guests
+    document.querySelectorAll('.protected-link').forEach(link => {
+        link.style.display = 'none';
+    });
+
+    // 2. Guard Protected Pages: Redirect guests trying to access tutorials, forum, etc.
+    if (isProtectedPage) {
+        // Redirect to home if they hit a protected page while logged out
+        if (currentPath.includes('/public/html/')) {
+            window.location.href = '../../index.html';
+        } else {
+            window.location.href = 'index.html';
+        }
+        return;
+    }
+
+    // Ensure Auth buttons are visible
     const authButtons = document.getElementById('auth-buttons');
     const profileMenu = document.getElementById('profile-menu');
     

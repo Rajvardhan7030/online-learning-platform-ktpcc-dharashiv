@@ -17,8 +17,8 @@ const saveValidation = [
     body('code').isString().notEmpty().withMessage('Code must be a valid string')
 ];
 
-// Public route for executing code
-router.post('/execute', executeValidation, executeCode);
+// Protected route for executing code
+router.post('/execute', protect, executeValidation, executeCode);
 
 // Protected routes (require user to be logged in)
 router.post('/save', protect, saveValidation, saveSnippet);

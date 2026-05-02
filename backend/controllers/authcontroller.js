@@ -84,7 +84,7 @@ exports.registerUser = async (req, res) => {
 
         if (user) {
             // Generate 6-digit verification code
-            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            const verificationCode = crypto.randomInt(100000, 999999).toString();
             user.verificationToken = crypto.createHash('sha256').update(verificationCode).digest('hex');
             await user.save({ validateBeforeSave: false });
 
@@ -157,7 +157,7 @@ exports.resendOTP = async (req, res) => {
         }
 
         // Generate new 6-digit verification code
-        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const verificationCode = crypto.randomInt(100000, 999999).toString();
         user.verificationToken = crypto.createHash('sha256').update(verificationCode).digest('hex');
         user.otpLastSent = Date.now();
         await user.save({ validateBeforeSave: false });
@@ -433,7 +433,7 @@ exports.forgotPassword = async (req, res) => {
         }
 
         // Generate 6-digit code instead of a long token
-        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const resetCode = crypto.randomInt(100000, 999999).toString();
         user.resetPasswordToken = crypto.createHash('sha256').update(resetCode).digest('hex');
         user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
 
