@@ -34,9 +34,15 @@ if (!process.env.JWT_SECRET) {
 }
 
 // CORS configuration
+
+const parseOrigins = (envVar) => {
+    if (!envVar) return [];
+    return envVar.split(',').map(url => url.trim()).filter(Boolean);
+};
+
 const allowedOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:5500',
-    process.env.IDE_URL || 'http://localhost:3000',
+    ...parseOrigins(process.env.FRONTEND_URL),
+    ...parseOrigins(process.env.IDE_URL),
     'http://127.0.0.1:5500',
     'http://127.0.0.1:3000',
     'http://localhost:5500',
