@@ -64,7 +64,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         if (response.ok && result.status === 'success') {
             alert('Registration Successful! ' + result.message);
             // Redirect to verification page
-            window.location.href = `/public/html/verify.html?email=${encodeURIComponent(requestData.email)}`;
+            window.location.href = `/html/verify.html?email=${encodeURIComponent(requestData.email)}`;
         } else {
             // Re-enable button on failure
             submitBtn.disabled = false;
