@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userDataString) {
         // ONLY redirect if they are on the welcome page.
         if (isWelcomePage) {
-            window.location.href = 'public/html/dashboard.html';
+            window.location.href = '/html/dashboard.html';
             return; // Stop execution so it redirects cleanly
         }
         
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. Guard Protected Pages: Redirect guests trying to access tutorials, forum, etc.
     if (isProtectedPage) {
         // Redirect to home if they hit a protected page while logged out
-        if (currentPath.includes('/public/html/')) {
+        if (currentPath.includes('/html/') || currentPath.includes('/public/html/')) {
             window.location.href = '../../index.html';
         } else {
             window.location.href = 'index.html';
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Redirect them back to the main homepage
             // We use the location of this script to determine how to get home
             const currentPath = window.location.pathname;
-            if (currentPath.includes('/public/html/')) {
+            if (currentPath.includes('/html/') || currentPath.includes('/public/html/')) {
                 window.location.href = '../../index.html';
             } else {
                 window.location.href = 'index.html';

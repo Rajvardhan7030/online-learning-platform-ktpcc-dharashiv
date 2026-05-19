@@ -10,7 +10,7 @@ let currentOpenSetting = null;
 function getAuthHeaders() {
     const user = JSON.parse(localStorage.getItem('ide_user'));
     if (!user || !user.token) {
-        window.location.href = '/public/html/auth.html'; // Kick them out if not logged in
+        window.location.href = '/html/auth.html';
         return null;
     }
     return {

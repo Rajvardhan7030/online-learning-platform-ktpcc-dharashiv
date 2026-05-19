@@ -6,10 +6,10 @@ const topicsData = {
             titleHi: "1. वेब डेवलपमेंट का परिचय",
             youtubeUrlEn: "https://www.youtube.com/embed/EceJQ05KTf4?si=xY4CJp60m3vK0PWb", 
             docTextEn: "<h4>Welcome to Web Development!</h4><p>Web development is the building and maintenance of websites. The core technologies are HTML, CSS, and JavaScript.</p>",
-            podcastEn: "public/audio/the intro of web-devlopment_eng.m4a", 
+            podcastEn: "/audio/the intro of web-devlopment_eng.m4a", 
             youtubeUrlHi: "https://www.youtube.com/embed/z0n1aQ3IxWI", 
             docTextHi: "<h4>वेब डेवलपमेंट में आपका स्वागत है!</h4><p>वेब डेवलपमेंट वेबसाइटों के निर्माण और रखरखाव की प्रक्रिया है। मुख्य प्रौद्योगिकियां HTML, CSS और JavaScript हैं।</p>",
-            podcastHi: "public/audio/the intro of web-devlopment_hindi.m4a" 
+            podcastHi: "/audio/the intro of web-devlopment_hindi.m4a" 
         },
         { 
             titleEn: "2. Introduction to HTML",
@@ -57,70 +57,70 @@ const topicsData = {
         titleHi: "1. JavaScript का परिचय और वातावरण सेटअप",
         youtubeUrlEn: "https://www.youtube.com/embed/...", 
         docTextEn: "<h4>Getting Started with JS</h4><p>JavaScript is the programming language of the web. Learn about browser console, linking external JS files, using VS Code with Live Server, and the difference between client-side and server-side JS.</p>",
-        podcastEn: "public/audio/js-intro-eng.m4a", 
+        podcastEn: "/audio/js-intro-eng.m4a", 
         youtubeUrlHi: "https://www.youtube.com/embed/...", 
         docTextHi: "<h4>JS के साथ शुरुआत</h4><p>JavaScript वेब की प्रोग्रामिंग भाषा है। ब्राउज़र कंसोल, external JS फाइल्स लिंक करना, Live Server के साथ VS Code का उपयोग और client-side बनाम server-side JS के बीच अंतर सीखें।</p>",
-        podcastHi: "public/audio/js-intro-hindi.m4a" 
+        podcastHi: "/audio/js-intro-hindi.m4a" 
     },
     { 
         titleEn: "2. Variables, Data Types & Operators",
         titleHi: "2. वेरिएबल्स, डेटा प्रकार और ऑपरेटर",
         youtubeUrlEn: "https://www.youtube.com/embed/...", 
         docTextEn: "<h4>JS Fundamentals</h4><p>Master var, let, and const declarations. Understand primitive types (string, number, boolean, null, undefined, symbol), typeof operator, template literals, and arithmetic/comparison/logical operators.</p>",
-        podcastEn: "public/audio/js-variables-eng.m4a", 
+        podcastEn: "/audio/js-variables-eng.m4a", 
         youtubeUrlHi: "https://www.youtube.com/embed/...", 
         docTextHi: "<h4>JS बुनियादी बातें</h4><p>Var, let और const घोषणाओं में महारत हासिल करें। प्रिमिटिव प्रकार (string, number, boolean, null, undefined, symbol), typeof ऑपरेटर, टेम्पलेट लिटरल्स और अंकगणितीय/तुलनात्मक/तार्किक ऑपरेटरों को समझें।</p>",
-        podcastHi: "public/audio/js-variables-hindi.m4a" 
+        podcastHi: "/audio/js-variables-hindi.m4a" 
     },
     { 
         titleEn: "3. Control Flow: Conditionals & Loops",
         titleHi: "3. नियंत्रण प्रवाह: शर्तें और लूप्स",
         youtubeUrlEn: "https://www.youtube.com/embed/...", 
         docTextEn: "<h4>Logic Building</h4><p>Learn if-else-if statements, switch cases, ternary operators, for loops, while loops, do-while loops, break/continue statements, and iterating over arrays using for...of and for...in.</p>",
-        podcastEn: "public/audio/js-controlflow-eng.m4a", 
+        podcastEn: "/audio/js-controlflow-eng.m4a", 
         youtubeUrlHi: "https://www.youtube.com/embed/...", 
         docTextHi: "<h4>लॉजिक बिल्डिंग</h4><p>If-else-if स्टेटमेंट्स, स्विच केस, टर्नरी ऑपरेटर, for लूप्स, while लूप्स, do-while लूप्स, break/continue स्टेटमेंट्स और for...of और for...in का उपयोग करके एरे पर इटरेट करना सीखें।</p>",
-        podcastHi: "public/audio/js-controlflow-hindi.m4a" 
+        podcastHi: "/audio/js-controlflow-hindi.m4a" 
     },
     { 
         titleEn: "4. Arrays, Objects & String Methods",
         titleHi: "4. एरे, ऑब्जेक्ट्स और स्ट्रिंग मेथड्स",
         youtubeUrlEn: "https://www.youtube.com/embed/...", 
         docTextEn: "<h4>Data Structures in JS</h4><p>Master array methods (push, pop, shift, unshift, splice, slice, map, filter, forEach), object creation and property access, and essential string methods (split, join, substring, replace, trim).</p>",
-        podcastEn: "public/audio/js-datastructures-eng.m4a", 
+        podcastEn: "/audio/js-datastructures-eng.m4a", 
         youtubeUrlHi: "https://www.youtube.com/embed/...", 
         docTextHi: "<h4>JS में डेटा संरचनाएं</h4><p>एरे मेथड्स (push, pop, shift, unshift, splice, slice, map, filter, forEach), ऑब्जेक्ट बनाना और प्रॉपर्टी एक्सेस, और आवश्यक स्ट्रिंग मेथड्स (split, join, substring, replace, trim) में महारत हासिल करें।</p>",
-        podcastHi: "public/audio/js-datastructures-hindi.m4a" 
+        podcastHi: "/audio/js-datastructures-hindi.m4a" 
     },
     { 
         titleEn: "5. Functions, Scope & Arrow Functions",
         titleHi: "5. फंक्शन, स्कोप और ऐरो फंक्शन",
         youtubeUrlEn: "https://www.youtube.com/embed/...", 
         docTextEn: "<h4>Modern JavaScript Functions</h4><p>Understand function declarations vs expressions, parameters and return values, default parameters, block scope vs function scope, hoisting, and ES6 arrow functions with implicit returns.</p>",
-        podcastEn: "public/audio/js-functions-eng.m4a", 
+        podcastEn: "/audio/js-functions-eng.m4a", 
         youtubeUrlHi: "https://www.youtube.com/embed/...", 
         docTextHi: "<h4>आधुनिक JavaScript फंक्शन</h4><p>फंक्शन डिक्लेरेशन बनाम एक्सप्रेशन, पैरामीटर्स और रिटर्न वैल्यू, डिफॉल्ट पैरामीटर्स, ब्लॉक स्कोप बनाम फंक्शन स्कोप, होइस्टिंग और ES6 ऐरो फंक्शन इम्प्लिसिट रिटर्न के साथ समझें।</p>",
-        podcastHi: "public/audio/js-functions-hindi.m4a" 
+        podcastHi: "/audio/js-functions-hindi.m4a" 
     },
     { 
         titleEn: "6. DOM Manipulation & Events",
         titleHi: "6. DOM मैनिपुलेशन और इवेंट्स",
         youtubeUrlEn: "https://www.youtube.com/embed/...", 
         docTextEn: "<h4>Interacting with Webpages</h4><p>Learn document.querySelector, changing textContent and innerHTML, modifying CSS styles via JS, adding/removing classes, event listeners (click, submit, keyup), and form validation basics.</p>",
-        podcastEn: "public/audio/js-dom-eng.m4a", 
+        podcastEn: "/audio/js-dom-eng.m4a", 
         youtubeUrlHi: "https://www.youtube.com/embed/...", 
         docTextHi: "<h4>वेबपेज से इंटरैक्ट करना</h4><p>Document.querySelector, textContent और innerHTML बदलना, JS के माध्यम से CSS स्टाइल्स संशोधित करना, क्लासेस जोड़ना/हटाना, इवेंट लिस्नर्स (click, submit, keyup) और फॉर्म वैलिडेशन बुनियादी बातें सीखें।</p>",
-        podcastHi: "public/audio/js-dom-hindi.m4a" 
+        podcastHi: "/audio/js-dom-hindi.m4a" 
     },
     { 
         titleEn: "7. Async Programming, JSON & LocalStorage",
         titleHi: "7. एसिंक्रोनस प्रोग्रामिंग, JSON और LocalStorage",
         youtubeUrlEn: "https://www.youtube.com/embed/...", 
         docTextEn: "<h4>Advanced Web Concepts</h4><p>Understand setTimeout and setInterval, callbacks, Promises, async/await syntax, fetching data from APIs, parsing JSON, and storing data in browser using localStorage and sessionStorage.</p>",
-        podcastEn: "public/audio/js-async-eng.m4a", 
+        podcastEn: "/audio/js-async-eng.m4a", 
         youtubeUrlHi: "https://www.youtube.com/embed/...", 
         docTextHi: "<h4>उन्नत वेब अवधारणाएं</h4><p>SetTimeout और setInterval, कॉलबैक्स, प्रॉमिसेस, async/await सिंटैक्स, APIs से डेटा फेच करना, JSON पार्स करना और localStorage और sessionStorage का उपयोग करके ब्राउज़र में डेटा संग्रहीत करना समझें।</p>",
-        podcastHi: "public/audio/js-async-hindi.m4a" 
+        podcastHi: "/audio/js-async-hindi.m4a" 
     }
 ],
      python: [

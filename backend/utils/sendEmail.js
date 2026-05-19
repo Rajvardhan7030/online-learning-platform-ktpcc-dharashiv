@@ -6,6 +6,9 @@ const sendEmail = async (options) => {
         host: 'smtp.resend.com',
         port: 465,
         secure: true, // true for 465, false for other ports
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000,
         auth: {
             user: 'resend', // This is literally "resend"
             pass: process.env.RESEND_API_KEY,

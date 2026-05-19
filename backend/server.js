@@ -40,7 +40,7 @@ const parseOrigins = (envVar) => {
     return envVar.split(',').map(url => url.trim()).filter(Boolean);
 };
 
-const allowedOrigins = [
+const allowedOrigins = new Set([
     ...parseOrigins(process.env.FRONTEND_URL),
     ...parseOrigins(process.env.IDE_URL),
     'http://127.0.0.1:5500',
@@ -50,19 +50,33 @@ const allowedOrigins = [
     'https://e-learn.in',
     'https://www.e-learn.in',
     'https://ide.e-learn.in'
-];
+]);
+
+const isAllowedOrigin = (origin) => {
+    if (!origin) return true;
+
+    try {
+        const { hostname } = new URL(origin);
+        return allowedOrigins.has(origin) ||
+            hostname === 'localhost' ||
+            hostname === '127.0.0.1' ||
+            hostname.endsWith('.vercel.app');
+    } catch (err) {
+        return false;
+    }
+};
 
 const corsOptions = {
     origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        if (isAllowedOrigin(origin)) {
             return callback(null, true);
         } else {
             console.error(`CORS Blocked: The origin ${origin} is not allowed.`);
             return callback(new Error('CORS Policy violation'), false);
         }
     },
-    credentials: true
+    credentials: true,
+    optionsSuccessStatus: 204
 };
 app.use(cors(corsOptions));
 
@@ -82,7 +96,9 @@ app.use(limiter);
 // MongoDB Connection with retry logic
 const connectWithRetry = () => {
     console.log('🔄 Attempting MongoDB connection...');
-    mongoose.connect(process.env.MONGO_URI)
+    mongoose.connect(process.env.MONGO_URI, {
+        serverSelectionTimeoutMS: 10000
+    })
     .then(() => console.log('✅ MongoDB connected successfully to elearning-ide'))
     .catch((err) => {
         console.error('❌ MongoDB connection error:', err.message);
@@ -130,7 +146,7 @@ const server = app.listen(PORT, async () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     
     // Professional Touch: Auto-install runtimes if running in Docker/Development
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.INSTALL_PISTON_RUNTIMES === 'true') {
         try {
             const { installRuntimes } = require('./install_runtimes');
             // We'll run this in the background so it doesn't block server start
