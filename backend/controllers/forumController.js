@@ -26,6 +26,15 @@ const formatThread = (thread) => ({
     }))
 });
 
+const normalizeTags = (tags) => {
+    const source = Array.isArray(tags) ? tags : String(tags || '').split(',');
+
+    return source
+        .map((tag) => String(tag).trim().toLowerCase())
+        .filter(Boolean)
+        .slice(0, 5);
+};
+
 exports.getThreads = async (req, res) => {
     try {
         const threads = await ForumThread.find()
@@ -49,13 +58,7 @@ exports.createThread = async (req, res) => {
     }
 
     try {
-        const tags = Array.isArray(req.body.tags)
-            ? req.body.tags
-            : String(req.body.tags || '')
-                .split(',')
-                .map((tag) => tag.trim().toLowerCase())
-                .filter(Boolean)
-                .slice(0, 5);
+        const tags = normalizeTags(req.body.tags);
 
         const thread = await ForumThread.create({
             author: req.user._id,
@@ -106,6 +109,10 @@ exports.addAnswer = async (req, res) => {
             data: formatThread(populatedThread)
         });
     } catch (error) {
+        if (error.name === 'CastError') {
+            return res.status(404).json({ message: 'Discussion thread not found' });
+        }
+
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

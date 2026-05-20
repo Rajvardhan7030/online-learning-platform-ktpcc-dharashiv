@@ -29,7 +29,12 @@ app.use(express.urlencoded({ extended: false }));
 
 // Startup Validation
 if (!process.env.JWT_SECRET) {
-    console.error('❌ FATAL ERROR: JWT_SECRET is not defined in environment variables.');
+    console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables.');
+    process.exit(1);
+}
+
+if (!process.env.MONGO_URI) {
+    console.error('FATAL ERROR: MONGO_URI is not defined in environment variables.');
     process.exit(1);
 }
 
@@ -61,7 +66,7 @@ const isAllowedOrigin = (origin) => {
             hostname === 'localhost' ||
             hostname === '127.0.0.1' ||
             hostname.endsWith('.vercel.app');
-    } catch (err) {
+    } catch {
         return false;
     }
 };
@@ -72,7 +77,7 @@ const corsOptions = {
             return callback(null, true);
         } else {
             console.error(`CORS Blocked: The origin ${origin} is not allowed.`);
-            return callback(new Error('CORS Policy violation'), false);
+            return callback(null, false);
         }
     },
     credentials: true,
@@ -95,13 +100,13 @@ app.use(limiter);
 
 // MongoDB Connection with retry logic
 const connectWithRetry = () => {
-    console.log('🔄 Attempting MongoDB connection...');
+    console.log('Attempting MongoDB connection...');
     mongoose.connect(process.env.MONGO_URI, {
         serverSelectionTimeoutMS: 10000
     })
-    .then(() => console.log('✅ MongoDB connected successfully to elearning-ide'))
+    .then(() => console.log('MongoDB connected successfully'))
     .catch((err) => {
-        console.error('❌ MongoDB connection error:', err.message);
+        console.error('MongoDB connection error:', err.message);
         console.log('Retrying in 5 seconds...');
         setTimeout(connectWithRetry, 5000);
     });
@@ -111,7 +116,7 @@ connectWithRetry();
 
 // Handle MongoDB events
 mongoose.connection.on('disconnected', () => {
-    console.log('⚠️ MongoDB disconnected');
+    console.log('MongoDB disconnected');
 });
 
 mongoose.connection.on('error', (err) => {
@@ -143,7 +148,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, async () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
     
     // Professional Touch: Auto-install runtimes if running in Docker/Development
     if (process.env.INSTALL_PISTON_RUNTIMES === 'true') {
@@ -151,8 +156,8 @@ const server = app.listen(PORT, async () => {
             const { installRuntimes } = require('./install_runtimes');
             // We'll run this in the background so it doesn't block server start
             installRuntimes().catch(err => console.error('Runtime auto-install failed:', err.message));
-        } catch (err) {
-            console.log('💡 Note: install_runtimes.js not found or failed to load. Skipping auto-provisioning.');
+        } catch {
+            console.log('Note: install_runtimes.js not found or failed to load. Skipping auto-provisioning.');
         }
     }
 });

@@ -107,6 +107,16 @@ const resetPasswordValidation = [
         .withMessage('New password must be at least 6 characters long')
 ];
 
+const updateProgressValidation = [
+    body('course')
+        .isIn(['htmlcss', 'javascript', 'python'])
+        .withMessage('Invalid course name'),
+    body('topic')
+        .trim()
+        .notEmpty()
+        .withMessage('Topic is required')
+];
+
 router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation, loginUser);
 router.post('/verify-email', verifyEmailValidation, verifyEmail);
@@ -120,7 +130,7 @@ router.post('/reset-password', resetPasswordValidation, resetPassword);
 router.put('/update-username', protect, updateUsernameValidation, updateUsername);
 router.put('/update-password', protect, updatePasswordValidation, updatePassword);
 router.delete('/delete-account', protect, deleteAccountValidation, deleteAccount);
-router.post('/update-progress', protect, updateProgress);
+router.post('/update-progress', protect, updateProgressValidation, updateProgress);
 router.post('/reset-progress', protect, (async (req, res) => {
     try {
         const User = require('../model/user.js');

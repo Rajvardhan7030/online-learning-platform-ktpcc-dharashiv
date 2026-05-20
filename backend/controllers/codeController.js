@@ -19,39 +19,36 @@ exports.executeCode = asyncHandler(async (req, res, next) => {
     const PISTON_URL = process.env.PISTON_URL || 'http://127.0.0.1:2000/api/v2/piston/execute';
     const PUBLIC_PISTON_URL = 'https://emkc.org/api/v2/piston/execute';
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const executeWithTimeout = async (url) => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+
+        try {
+            return await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    language: language,
+                    version: "*", 
+                    files: [{ content: code }]
+                }),
+                signal: controller.signal
+            });
+        } finally {
+            clearTimeout(timeout);
+        }
+    };
 
     try {
         let response;
         try {
             // Attempt local Docker execution first
-            response = await fetch(PISTON_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    language: language,
-                    version: "*", 
-                    files: [{ content: code }]
-                }),
-                signal: controller.signal
-            });
-        } catch (localError) {
+            response = await executeWithTimeout(PISTON_URL);
+        } catch {
             console.warn('Local Piston API not reachable, falling back to public API...');
             // Fallback to public API
-            response = await fetch(PUBLIC_PISTON_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    language: language,
-                    version: "*", 
-                    files: [{ content: code }]
-                }),
-                signal: controller.signal
-            });
+            response = await executeWithTimeout(PUBLIC_PISTON_URL);
         }
-
-        clearTimeout(timeout);
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -103,7 +100,7 @@ exports.saveSnippet = asyncHandler(async (req, res, next) => {
 //    Get all snippets for the logged-in user
 //   GET /api/code/snippets
 //  Private (Requires JWT)
-exports.getSnippets = asyncHandler(async (req, res, next) => {
+exports.getSnippets = asyncHandler(async (req, res, _next) => {
     const snippets = await Snippet.find({ user: req.user._id }).sort({ createdAt: -1 });
     res.status(200).json({ status: 'success', data: snippets });
 });

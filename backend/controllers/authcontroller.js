@@ -364,6 +364,10 @@ exports.updateProgress = async (req, res) => {
             return res.status(400).json({ message: 'Invalid course name' });
         }
 
+        if (typeof topic !== 'string' || topic.trim().length === 0) {
+            return res.status(400).json({ message: 'Topic is required' });
+        }
+
         const user = await User.findById(req.user.id);
 
         if (!user) {
@@ -374,8 +378,10 @@ exports.updateProgress = async (req, res) => {
             user.progress[course] = [];
         }
 
-        if (!user.progress[course].includes(topic)) {
-            user.progress[course].push(topic);
+        const normalizedTopic = topic.trim();
+
+        if (!user.progress[course].includes(normalizedTopic)) {
+            user.progress[course].push(normalizedTopic);
             syncBadges(user);
             await user.save();
         }
