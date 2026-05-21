@@ -10,7 +10,7 @@ let currentOpenSetting = null;
 function getAuthHeaders() {
     const user = JSON.parse(localStorage.getItem('ide_user'));
     if (!user || !user.token) {
-        window.location.href = '/html/auth.html';
+        window.location.href = 'auth.html';
         return null;
     }
     return {
@@ -178,7 +178,7 @@ async function deleteAccount(event) {
         if (response.ok) {
             localStorage.removeItem('ide_user');
             showToast('Account deleted. Redirecting...', 'error');
-            setTimeout(() => window.location.href = '/index.html', 1500);
+            setTimeout(() => window.location.href = '../../index.html', 1500);
         } else {
             showToast(result.message || 'Failed to delete account', 'error');
             submitBtn.innerHTML = '<i class="fas fa-trash"></i> Delete My Account';

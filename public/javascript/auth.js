@@ -3,6 +3,26 @@
 // ==========================================
 const BACKEND_URL = API_BASE_URL;
 
+const getErrorMessage = (result, fallbackMessage) => {
+    if (result && Array.isArray(result.errors)) {
+        return result.errors.map(err => err.msg || err.message).filter(Boolean).join('\n');
+    }
+
+    return (result && (result.message || result.error)) || fallbackMessage;
+};
+
+const parseJsonResponse = async (response) => {
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+        return response.json();
+    }
+
+    const text = await response.text();
+    return {
+        message: text || `Unexpected server response (${response.status})`
+    };
+};
+
 /**
  * Utility to display errors clearly to the user.
  */
@@ -29,6 +49,8 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn.textContent;
+    const errorDiv = document.getElementById('register-error');
+    if (errorDiv) errorDiv.style.display = 'none';
     
     // Visual Feedback: Disable button and show loading state
     submitBtn.disabled = true;
@@ -59,24 +81,18 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
             body: JSON.stringify(requestData)  // Send cleaned data without confirmPassword
         });
 
-        const result = await response.json();
+        const result = await parseJsonResponse(response);
 
         if (response.ok && result.status === 'success') {
             alert('Registration Successful! ' + result.message);
             // Redirect to verification page
-            window.location.href = `/html/verify.html?email=${encodeURIComponent(requestData.email)}`;
+            window.location.href = `verify.html?email=${encodeURIComponent(requestData.email)}`;
         } else {
             // Re-enable button on failure
             submitBtn.disabled = false;
             submitBtn.textContent = originalBtnText;
 
-            // Handle validation errors array from express-validator
-            if (result.errors && Array.isArray(result.errors)) {
-                const errorMessages = result.errors.map(err => err.msg).join('\n');
-                showError(errorMessages);
-            } else {
-                showError(result.message || 'Registration failed');
-            }
+            showError(getErrorMessage(result, 'Registration failed'));
         }
     } catch (error) {
         // Re-enable button on error
@@ -84,7 +100,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         submitBtn.textContent = originalBtnText;
         
         console.error('Registration Error:', error);
-        showError('Could not connect to the server. Please ensure the backend is running.');
+        showError(`Could not connect to ${BACKEND_URL}. Please check the API deployment and CORS settings.`);
     }
 });
 
@@ -94,6 +110,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn.textContent;
+    const errorDiv = document.getElementById('login-error');
+    if (errorDiv) errorDiv.style.display = 'none';
     
     // Visual Feedback: Disable button and show loading state
     submitBtn.disabled = true;
@@ -112,7 +130,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             body: JSON.stringify(data)
         });
 
-        const result = await response.json();
+        const result = await parseJsonResponse(response);
 
         if (response.ok && result.status === 'success') {
             // Store user data excluding status
@@ -126,13 +144,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             submitBtn.disabled = false;
             submitBtn.textContent = originalBtnText;
 
-            // Handle validation errors array
-            if (result.errors && Array.isArray(result.errors)) {
-                const errorMessages = result.errors.map(err => err.msg).join('\n');
-                showError(errorMessages);
-            } else {
-                showError(result.message || 'Invalid credentials');
-            }
+            showError(getErrorMessage(result, 'Invalid credentials'));
         }
     } catch (error) {
         // Re-enable button on error

@@ -9,6 +9,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const resendTimer = document.getElementById("resend-timer");
     const resendContainer = document.getElementById("resend-container");
 
+    const parseJsonResponse = async (response) => {
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            return response.json();
+        }
+
+        const text = await response.text();
+        return {
+            message: text || `Unexpected server response (${response.status})`
+        };
+    };
+
     const urlParams = new URLSearchParams(window.location.search);
     const email = urlParams.get('email');
 
@@ -58,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ email })
             });
 
-            const data = await response.json();
+            const data = await parseJsonResponse(response);
 
             if (response.ok) {
                 alert("New verification code sent to your email!");
@@ -106,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ email, code })
             });
 
-            const data = await response.json();
+            const data = await parseJsonResponse(response);
 
             if (response.ok) {
                 statusIcon.className = "fas fa-check-circle success-icon";

@@ -75,19 +75,18 @@ exports.registerUser = async (req, res) => {
         }
 
         // Create user
+        const verificationCode = crypto.randomInt(100000, 999999).toString();
+        const verificationToken = crypto.createHash('sha256').update(verificationCode).digest('hex');
+
         const user = await User.create({ 
             username, 
             email, 
             password,
+            verificationToken,
             otpLastSent: Date.now()
         });
 
         if (user) {
-            // Generate 6-digit verification code
-            const verificationCode = crypto.randomInt(100000, 999999).toString();
-            user.verificationToken = crypto.createHash('sha256').update(verificationCode).digest('hex');
-            await user.save({ validateBeforeSave: false });
-
             const message = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
                     <h2 style="color: #333; text-align: center;">Welcome to CodeLearn!</h2>
@@ -116,14 +115,26 @@ exports.registerUser = async (req, res) => {
                 // Delete the incomplete user record so they aren't permanently stuck
                 await User.findByIdAndDelete(user._id);
 
-                res.status(500).json({ message: 'Email could not be sent. Please try registering again.', error: err.message });
+                res.status(502).json({
+                    status: 'error',
+                    message: 'Registration could not be completed because the verification email failed to send. Please try again later.',
+                    error: process.env.NODE_ENV === 'production' ? undefined : err.message
+                });
             }
         } else {
             res.status(400).json({ message: 'Invalid user data' });
         }
     } catch (error) {
         console.error('Register error:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        if (error.code === 11000) {
+            return res.status(400).json({ message: 'User already exists with this email or username' });
+        }
+
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error',
+            error: process.env.NODE_ENV === 'production' ? undefined : error.message
+        });
     }
 };
 

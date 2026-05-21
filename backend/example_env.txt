@@ -11,7 +11,8 @@ JWT_SECRET=your_secure_random_key_here
 # Email Configuration (SMTP)
 
 RESEND_API_KEY=re_your_resend_api_key
-EMAIL_FROM=CodeLearn <onboarding@resend.dev>
+# Use an address on a verified Resend domain in production.
+EMAIL_FROM=CodeLearn <noreply@your-verified-domain.com>
 
 # Backup Service: Gmail
 # Note: Requires App Password and 2FA enabled
@@ -22,5 +23,6 @@ EMAIL_PASSWORD=your-gmail-app-password
 PISTON_URL=http://127.0.0.1:2000/api/v2/piston/execute
 
 # Frontend URLs
-FRONTEND_URL=http://localhost:5500
-IDE_URL=http://localhost:3000
+# Comma-separated values are supported for preview and production domains.
+FRONTEND_URL=http://localhost:5500,https://your-main-frontend.vercel.app,https://e-learn.in,https://www.e-learn.in
+IDE_URL=http://localhost:3000,https://your-ide.vercel.app,https://ide.e-learn.in

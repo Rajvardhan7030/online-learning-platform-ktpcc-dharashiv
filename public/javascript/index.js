@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userDataString) {
         // ONLY redirect if they are on the welcome page.
         if (isWelcomePage) {
-            window.location.href = '/html/dashboard.html';
+            window.location.href = '/public/html/dashboard.html';
             return; // Stop execution so it redirects cleanly
         }
         
